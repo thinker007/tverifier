@@ -139,7 +139,7 @@ massive amount of data in a searchable fashion e.g DBpedia uses SPARQL endpoint,
 Freebase uses MQL api. Open source implementation of Python wrappers exist for
 both the interfaces exist and appear to be mature enough for our needs.
 
-\subsection{Freebase} 
+\subsubsection{Freebase} 
 Freebase has information about approximately 20 million Topics, each one having a
 unique Id, which can help distinguish multiple entities which have similar names,
 such as Henry Ford the industrialist vs Henry Ford the footballer. Most of the
@@ -150,7 +150,7 @@ the Wikipedia but also other sources; users can submit data to the Freebase
 datastore and expand it in richness. We tinkered with the api\cite{freebaseapi}
 and it appeared to be the most viable starting point for the project.
 
-\subsubsection{Motivational Example}
+\subparagraph{Motivational Example}
 
 \begin{lstlisting}[label=some-code,caption=Minimal code to Freebase]
 
@@ -204,7 +204,7 @@ Movie names & their various forms
     'Insonnia_d$0027amore',
     '62812',
     'Schlaflos_in_Seattle',
-    'sleepless-in-seattle']
+    'sleepless-in-seattle'\]
 
 \end{lstlisting}
 
@@ -215,7 +215,7 @@ appear together, and the answer lists these three movies namely - ``Joe versus
 the Volcano'', `` Sleepless in Seatle'' and ``You\'ve got Mail''. A quick lookup
 of the Wikipedia and IMDB pages also confirm the same. 
 
-\subsection{Dbpedia}
+\subsubsection{Dbpedia}
 DBpedia is a similar project to Freebase, but it focuses mainly on the content
 available from Wikipedia. It scores in being precisely importing the data from
 the info boxes in Wikipedia pages, but at this stage it does not seem to be
@@ -223,7 +223,7 @@ offering anything additional over Freebase \cite{freebasedbpedia}. We are yet to
 explore its programmatic interface \cite{dbpediaapi}.
 
 
-\subsection{Yago}
+\subsubsection{Yago}
 YAGO is a semantic knowledge base with over 900,000 entities (like persons,
 organizations, cities, etc.) and uses Wikipedia and Wordnet as its main source of
 information. We are yet to explore the programmatic interfaces it provides and
@@ -232,8 +232,8 @@ how we can use it for the project.
 
 
 
-\section{Truthfulness verification }
-\subsection {Building queries from the data supplied by the user}
+\subsection{Truthfulness verification }
+\subsubsection {Building queries from the data supplied by the user}
 
 We take the content words from the topic unit($TU$), along with each of the
 alternative units($AU$), and plugin the datatype($t$) to form a number of
@@ -260,7 +260,7 @@ of information is something we can not formulate at this stage with out further
 exploration.
 
 
-\subsection{Application of Machine learning algorithms}
+\subsubsection{Application of Machine learning algorithms}
 Though usage of machine learning algorithm seems to be very exciting approach at
 this point, we are also skeptical about it. Supervised classifiers might not be
 benficial for us due to the limited dataset for training and the potentialy
