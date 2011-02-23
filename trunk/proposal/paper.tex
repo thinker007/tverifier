@@ -36,7 +36,8 @@
 
 \author{
 Tathagata Dasgupta, ABM Musa\\
-Email: \{tdasgu2, amusa2\}@uic.edu }
+Email: \{tdasgu2, amusa2\}@uic.edu\\
+URL: http://code.google.com/p/tverifier }
 
 \date{}
 \maketitle
@@ -273,7 +274,25 @@ However, finding sense of words in a complex problem in general and not easy to 
 now Wikipedia has "Filipino is the national language of Philipines". Both sentences have same meaning but it is not easy to relate primary with national because they are not each others synonym as separate words. They become synonym depending on the context they are used such as above example. At this point, we don't have any generic strategy to handle these kind of situations. However, we will explore more to find possible ways to solve these problems. And one possible way may be to use some natural language processing techniques. Specifically, we will look into NLTK library to solve these kind of issues.
 
 \subsubsection{Use of Co-reference Program}
-Totha: please write up two lines here
+Coreference resolution is the process of determining whether two
+expressions in natural language refer to the same entity in the world.
+\cite{doi:10.1162/089120101753342653}.
+In the context of previous example we can use co-reference resolution
+if we have sentences like
+
+
+\emph{"Tom Hanks is the lead actor in the movie Sleepless in Seatle.
+He was nominated for the Golden Globe awards for this movie in 1994."
+}
+
+The pronoun "He" refers to Tom Hanks and would imply
+the document is about a male, allowing us to disambiguate Tom Hank's
+gender. The popular conference resolution api-s in use are those from
+LingPipe\cite{LingPipecoref} and OpenNLP \cite{OpenNLPcoref}. We have
+not yet evaluated them, and pondering if it would add sufficient value
+to the system as the topic units need not be so specific. More
+ontological information might already be available.
+
 
 
 
