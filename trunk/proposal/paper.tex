@@ -13,33 +13,6 @@
 
 
 
-\newcommand{\handout}[5]{
-  \noindent
-  \begin{center}
-  \framebox{
-    \vbox{
-      \hbox to 5.78in { {\bf CS-582: Information Retrieval } \hfill #2 }
-      \vspace{4mm}
-      \hbox to 5.78in { {\Large \hfill #5  \hfill} }
-      \vspace{2mm}
-      \hbox to 5.78in { {\em #3 \hfill #4} }
-    }
-  }
-  \end{center}
-  \vspace*{4mm}
-}
-
-\newcommand{\lecture}[4]{\handout{#1}{#2}{#3}{Scribe: #4}{Lecture #1}}
-
-\newtheorem{theorem}{Theorem}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{observation}[theorem]{Observation}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{claim}[theorem]{Claim}
-\newtheorem{fact}[theorem]{Fact}
-\newtheorem{assumption}[theorem]{Assumption}
 
 % 1-inch margins, from fullpage.sty by H.Partl, Version 2, Dec. 15, 1988.
 \topmargin 0pt
@@ -57,7 +30,16 @@
 
 \begin{document}
 
-\lecture {3 --- February 23, 2010}{Spring 2011}{ABM Musa }{Tathagata Dasgupta}
+\title{Truthfulness Verification System}
+
+\author{
+Tathagata Dasgupta, ABM Musa\\
+Email: \{tdasgu2, amusa2\}@uic.edu
+}
+
+\date{}
+\maketitle
+
 
 \section{Introduction}
 
@@ -174,12 +156,15 @@ exploration.
 
 \subsection{Application of Machine learning algorithms}: 
 Though application of machine learning algorithms like using Naive Bayesian,
-neural network etc to build classifiers on the property, value pairs appear
-exciting, we are skeptical about their performance primarily due to the variety
-of doubtful sentences that may arise. However, we may consider
-applying PU-learning on the system which is a technique useful specially when
-the training data is small in size. Another closely related technique we wish to
-explore is using probabilistic latent semantic indexing.
+neural network 
+
+
+
+\section{2.1 Supervised - Use a naive bayesian classifier}
+\section{Unsupervised methods - clustering or Probabilistic LSI}
+\section{Partially Supervised methods}
+
+
 
 %\bibliography{mybib}
 \bibliographystyle{alpha}
