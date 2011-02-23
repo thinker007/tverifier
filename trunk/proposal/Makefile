@@ -2,7 +2,7 @@ all: pdf
 
 pdf:
 	pdflatex paper.tex
-	#bibtex paper
+	bibtex paper
 
 	#latex paper.tex
 	#latex paper.tex
