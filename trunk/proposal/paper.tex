@@ -259,12 +259,18 @@ non-null results, how do we filter and rank the results with the available set
 of information is something we can not formulate at this stage with out further
 exploration.
 
-\subsubsection{Finding Sense using Wordnet}
+\subsubsection{Finding Sense of Words}
 To classify a statement as true or false we need to get the semantic of sense of the words of the sentences. For example consider the following sentence. 
 
 \emph{"Tom Hanks was the lead actress in the movie sleepless in Seattle"}
 
 Now our query results from ontologies will give us the fact that Tom hanks is a male actor. Now using wordnet we will be able to find that actress means female actor. So by simple inference our system will be able to classify the above example as untruthful.
+
+However, finding sense of words in a complex problem in general and not easy to solve for all cases all the time. For example, consider the following sentence.
+
+\emph{"Filipino is the primary language of Philipines"}
+
+now Wikipedia has "Filipino is the national language of Philipines". Both sentences have same meaning but it is not easy to relate primary with national because they are not each others synonym as separate words. They become synonym depending on the context they are used such as above example. At this point, we don't have any generic strategy to handle these kind of situations. However, we will explore more to find possible ways to solve these problems. And one possible way may be to use some natural language processing techniques. Specifically, we will look into NLTK library to solve these kind of issues.
 
 \subsubsection{Use of Co-reference Program}
 Totha: please write up two lines here
