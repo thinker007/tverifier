@@ -48,23 +48,24 @@ Email: \{tdasgu2, amusa2\}@uic.edu
 \section{Current System}
 Current system for truthfulness verification is called T-verifier, which uses two phase methods for truthfulness verification of statements. Each of these two phases rely heavily on search results returned by popular search engines. T-verifier takes the doubtful statements (DS) as input from the user along with the doubtful unit (DU). Phrase after removing DU from DS is called topic unit (TU).
 
-At the first phase, T-verifier generates alternative statements by supplying TU to search engine and collecting the relevant alternate DUs. However, from basic web search may result in lot of alternate DUs that are not semantically or logically relevant to the original DS. Hence, T-verifier uses combination of seven features to rank alternate DUs. These features primarily exploits the facts that relevant alternative units frequently co-occur, people often mention both misconception and truthful conception together, data-type matching, and sense-closeness. 
+At the first phase, T-verifier generates alternative statements by supplying TU to search engine and collecting the relevant alternate DUs. However, from basic web search may result in lot of alternate DUs that are not semantically or logically relevant to the original DS. Hence, T-verifier uses combination of seven features to rank alternate DUs. These features primarily exploits the facts that relevant alternative units frequently co-occur, people often mention both misconception and truthful conception together, data-type matching, and sense-closeness. T-verifier chose top 5 alternative statements based on top 5 alternate DUs obtained in this phase. 
 
+At the second phase, top 5 alternative statements from phase 1 is supplied to the search engine again. Then the returned searched result is ranked by multiple rankers such as Alternative Unit Ranker, Hits ranker, Text-feature Ranker, Domain Authority Ranker etc. Then all those ranks are merged to form an overall ranking among the alternate statements and top statement in this final merged ranking is considered as truthful statement. 
 
-We are currently working to get the T-verifier code running on our
-systems, with inputs from Xian Li. So the descriptions below lacks some required
-details and makes some assumptions.
-
-
-As of now T-Verifier produces 5 alternative statements once it is provided with a
-doubtful statement (DS), a doubtful unit (DU), data type of the unit etc in the
-first phase. Though these sentences produced are quite accurate, the facility to
-pinpoint the correct alternative does exist yet. The project goal, may be formulated as:
-
-"Extract information from Wikipedia and ontologies ( such as Yago, DBpedia and
-Freebase) which helps to verify truthfulness of statements. Describe the
-extraction algorithm and how the information can be utilized to assist statement
-truthfulness verification."
+%We are currently working to get the T-verifier code running on our
+%systems, with inputs from Xian Li. So the descriptions below lacks some required
+%details and makes some assumptions.
+%
+%
+%As of now T-Verifier produces 5 alternative statements once it is provided with a
+%doubtful statement (DS), a doubtful unit (DU), data type of the unit etc in the
+%first phase. Though these sentences produced are quite accurate, the facility to
+%pinpoint the correct alternative does exist yet. The project goal, may be formulated as:
+%
+%"Extract information from Wikipedia and ontologies ( such as Yago, DBpedia and
+%Freebase) which helps to verify truthfulness of statements. Describe the
+%extraction algorithm and how the information can be utilized to assist statement
+%truthfulness verification."
 
 
 %figure
