@@ -46,9 +46,9 @@ Email: \{tdasgu2, amusa2\}@uic.edu
 
 
 \section{Current System}
-Current system for truthfulness verification is called T-verifier, which uses two phase methods for truthfulness verification of statements. Each of these two phases rely heavily on search results returned by popular search engines.
+Current system for truthfulness verification is called T-verifier, which uses two phase methods for truthfulness verification of statements. Each of these two phases rely heavily on search results returned by popular search engines. T-verifier takes the doubtful statements (DS) as input from the user along with the doubtful unit (DU). Phrase after removing DU from DS is called topic unit (TU).
 
-T-verifier takes the doubtful statements as input from the user along with 
+At the first phase, T-verifier generates alternative statements by supplying TU to search engine and collecting the relevant alternate DUs. However, from basic web search may result in lot of alternate DUs that are not semantically or logically relevant to the original DS. Hence, T-verifier uses combination of seven features to rank alternate DUs. These features primarily exploits the facts that relevant alternative units frequently co-occur, people often mention both misconception and truthful conception together, data-type matching, and sense-closeness. 
 
 
 We are currently working to get the T-verifier code running on our
