@@ -261,17 +261,18 @@ exploration.
 
 
 \subsubsection{Application of Machine learning algorithms}
-Though usage of machine learning algorithm seems to be very exciting approach at
-this point, we are also skeptical about it. Supervised classifiers might not be
-benficial for us due to the limited dataset for training and the potentialy
-unlimited variety of inputs to classify. However, if we can use Graph
-Based Partially Supervised Learning\cite{conf/acl/CelikyilmazTH09} or
-Spreading Activation \cite{Cohen1987255} on the information extacted from the
-rich ontologies is something we plan to explore.
+Though usage of machine learning algorithm seems to be a good approach at
+this point. Consider the following example.
+
+\emph{"Tom Hanks was the lead actress in the movie sleepless in Seattle"}
+
+Now If the algorithm can learn that Tom hanks is a male and so he can't be an actress then our system should be able to classify the above statement as false. 
+
+However, we will need to explore more to be sure that we can apply machine learning algorithms successfully. Supervised classifiers might not be beneficial for us due to the limited dataset for training and the potentially unlimited variety of inputs to classify. However, if we can use Graph Based Partially Supervised Learning\cite{conf/acl/CelikyilmazTH09} or Spreading Activation \cite{Cohen1987255} on the information extracted from the rich ontologies is something we plan to explore.
 
 
-
-
+\section{Conclusion}
+It this paper, we described current system for truthfulness verification of statements found in the web called T-Verifier and described the possible improvements to the current system. We will primarily use authentic information sources such as Wikipedia and Ontologies extracted from Wikipedia such as FreeBase, DBPedia, and YOGA to found the truthfulness of doubtful statements.  
 
 
 \bibliographystyle{plain}
