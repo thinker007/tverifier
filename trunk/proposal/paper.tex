@@ -160,17 +160,18 @@ various property, value pairs of the entity that we have supplied in the form
 of $TU$. In case the result is $\phi$, it suggests that we do not have
 information for this particulat combination $TU$ and $AU_{i}$. Due to the
 richness of the information in Freebase we can assume with a considerable degree of confidence
-that this combination is untrue.
+that this combination is untrue. This is one way verification, but in case of
+non-null results, how do we filter and rank the results with the available set
+of information is something we can not formulate at this stage with out further
+exploration.
 
 
 
- \subsection {Rank the alternative statements based on the results
-obtained by querying the ontologies}
+\subsection{Application of Machine learning algorithms}: 
+Though application of machine learning algorithms like using Naive Bayesian,
+neural network 
 
 
-
-\section{Finding relevance between the above two sets may be done in the
-following manner}: 
 
 \section{2.1 Supervised - Use a naive bayesian classifier}
 \section{Unsupervised methods - clustering or Probabilistic LSI}
@@ -179,6 +180,7 @@ following manner}:
 
 
 %\bibliography{mybib}
-%\bibliographystyle{alpha}
+\bibliographystyle{alpha}
 
 \end{document}
+
