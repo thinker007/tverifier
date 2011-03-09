@@ -233,12 +233,34 @@ how we can use it for the project.
 
 
 
-%\subsection{Truthfulness verification }
-%\subsubsection {Building queries from the data supplied by the user}
-%
-%We take the content words from the topic unit($TU$), along with each of the
-%alternative units($AU$), and plugin the datatype($t$) to form a number of
-%queries.
+\subsection{Truthfulness verification }
+\subsubsection {Building queries from the data supplied by the user}
+
+{\em Wed Mar  9 09:30:15 CST 2011}
+
+Formulating a proper Freebase query is for our specific purpose is a different process than the standard way of querying a search engine that does full text search on text documents. We start by introducing the  various abstraction levels associated with the freebase data.
+\begin{itemize}
+    \item  A {\em type} is a conceptual container of related {\em properties} commonly needed to describe a certain aspect of a {\em topic}.
+    \item  A {\em topic} can be assigned one or more types (the default type being /common/topic)
+    \item  As {\em properties} are grouped into {\em types}, {\em types} are grouped into {\em domains}.
+    \item  {\em Domains, types}, and {\em properties} are given IDs in a {\em namespace/key} hierarchy.
+    \item  Common well-known topics are given IDs in the /en namespace, which are human-readable English strings.
+    \item  {\em Topics} are uniquely identified within Freebase by {\em GUIDs}.
+    \item  {\em Properties} are {\em multi-value} by default, and multi-value properties and single-value properties can be queried in the same way.
+\end{itemize}
+In order to transform a sentence to a freebase query we have to one to one map a content word from the sentence($TU$ plus $DU$) to the above mentioned abstraction. In other words, the process involves identifying the contextual meaning of the content words. Although this is pretty intuitive when we do it manually, trying to achieving this programmatically is one the challenging aspect of the project. One way of doing it is using a part of speech taggers, along with chunk extraction and named entity recognition. (details in next section) 
+
+The key point of distinction is that this result set is the set of records from a hierarchical database. We can not stuff in every word from the topic units into a query to freebase, as MQL(metaweb query language) is Query By Example language, and has a rigid structure which is not immediately obvious given a sentence in natural langage. We incrementally build a query $Q$ starting from with one word $w_{i}$ from the word list $L$ extracted from the $TU$. Let the results associated with $q_{w_{i}}$ be ($R_{w_{i}}$). Initially Q = $\{q_{1}=w_{i}\}$
+
+ The following are the possible cases
+\begin{itemize}
+\item No results - In this case we get the synset from Wordnet $S_{w_{i}}$ and repeat the search with each word in the synseti $w_{j}^{s}$.
+\item If there is no match with the word or its synset, we reject $w_{i}$ from the query $Q$ and move on to the next word in $L$ and repeat the process.
+\item If $R$ is not empty, we retain the $w_{i}$ or $w_{j}^{s}$ in $Q$. Then we take the each of the remaining words $w_{j}$ from $L$ and $S_{w_{j}}$ and search in $R_{w_{i}}$. If $w_{j}$ or a synonym of it $w_{j}^{s}$ is found to occur in the resulti, we augment $Q$ with $w_{j}$ (or $w_{j}^{s}$). So $Q$ now becomes $Q =\{q_{1}=w_{i}, q_{2}=w_{j}\}$ or $\{q_{1}=w_{i},q_{2}=w_{j}^{s}\}$ 
+\item With the new $Q$ we again query Freebase and repeat the above steps.
+\item We terminate when all the words (and in their synsets) in $L$ have been substituted. This allows us to form the most appropriate query $Q$ from the $TU$. Note though this is essentially a breadth first search search of the graph, we would not be traversing very deep (though the branching factor can be pretty high) because of the small number of content words in $TU$ and their synsets.
+\item If the result returned by this query $Q$ contains the $DU$, we can say with a good degree of confidence that the statement is true.    
+\end{itemize}
 %\begin{align*}
 %q_{i} = \{{TU, AU_{i}, t_{AU_{i}}} \} \qquad \mbox {where $i = 1 \cdots n$} \\
 %\end{align*}
@@ -251,76 +273,41 @@ how we can use it for the project.
 %    = r_{i}
 %\end{align*}
 %
-%From what we have explored till now, by quering Freebase we can get the
-%various property, value pairs associated with an entity which is the $TU$ in
-%our case. In case the result is $\phi$, it suggests that we do not have
-%information for this particulat combination $TU$ and $AU_{i}$. Due to the richness of the information in Freebase we can assume with a considerable degree of confidence
-%that this combination is untrue. This is one way verification, but in case of
-%non-null results, how do we filter and rank the results with the available set
-%of information is something we can not formulate at this stage with out further
-%exploration.
-%
-%\subsubsection{Finding Sense of Words}
-%To classify a statement as true or false we need to get the semantic of sense of the words of the sentences. For example consider the following sentence. 
-%
-%\emph{"Tom Hanks was the lead actress in the movie sleepless in Seattle"}
-%
-%Now our query results from ontologies will give us the fact that Tom hanks is a male actor. Now using wordnet we will be able to find that actress means female actor. So by simple inference our system will be able to classify the above example as untruthful.
-%
-%However, finding sense of words in a complex problem in general and not easy to solve for all cases all the time. For example, consider the following sentence.
-%
-%\emph{"Filipino is the primary language of Philipines"}
-%
-%now Wikipedia has "Filipino is the national language of Philipines". Both sentences have same meaning but it is not easy to relate primary with national because they are not each others synonym as separate words. They become synonym depending on the context they are used such as above example. At this point, we don't have any generic strategy to handle these kind of situations. However, we will explore more to find possible ways to solve these problems. And one possible way may be to use some natural language processing techniques. Specifically, we will look into NLTK library to solve these kind of issues.
-%
-%\subsubsection{Use of Co-reference Program}
-%Coreference resolution is the process of determining whether two
-%expressions in natural language refer to the same entity in the world.
-%\cite{doi:10.1162/089120101753342653}.
-%In the context of previous example we can use co-reference resolution
-%if we have sentences like
-%
-%
-%\emph{"Tom Hanks is the lead actor in the movie Sleepless in Seatle.
-%He was nominated for the Golden Globe awards for this movie in 1994."
-%}
-%
-%The pronoun "He" refers to Tom Hanks and would imply
-%the document is about a male, allowing us to disambiguate Tom Hank's
-%gender. The popular conference resolution api-s in use are those from
-%LingPipe\cite{LingPipecoref} and OpenNLP \cite{OpenNLPcoref}. We have
-%not yet evaluated them, and pondering if it would add sufficient value
-%to the system as the topic units need not be so specific. More
-%ontological information might already be available.
-%
-%
-%
-%
-%\subsubsection{Application of Machine learning algorithms}
-%Though usage of machine learning algorithm seems to be a good approach at
-%this point. Consider the following example.
-%
-%\emph{"Tom Hanks was the lead actress in the movie sleepless in Seattle"}
-%
-%Now If the algorithm can learn that Tom hanks is a male and so he can't be an actress then our system should be able to classify the above statement as false. 
-%
-%However, we will need to explore more to be sure that we can apply machine learning algorithms successfully. Supervised classifiers might not be beneficial for us due to the limited dataset for training and the potentially unlimited variety of inputs to classify. However, if we can use Graph Based Partially Supervised Learning\cite{conf/acl/CelikyilmazTH09} or Spreading Activation \cite{Cohen1987255} on the information extracted from the rich ontologies is something we plan to explore.
-
-\subsection{Step-by-step Algorithm for Truthfulness Verification}
 
 
 \subsection{Examples of Truthfulness Verification}
 
 \subsubsection{Use of Freebase}
-Consider the following sentence:
+
+For all the 50 sentences mentioned in the original paper we tried the default POS tagger that comes with the Natural Language toolkit along with NE chunker, Binary NE Chunker and the IEER NE Chunker. None of the yeilded good results. So we used the Illinois named entity extractor from UIUC, which gave comparitively better results primarily because its database is built from various sources like the Wikipedia, Brown Hierarchical Word Clusters etc. 
+
+\begin{itemize}
+\item Correctly tagged 19
+\item Partly correct 14	
+\item Wrong/no identification 12
+\end{itemize}
+
+
+
+Consider one of the following sentences:
 
 \emph{"Tom Hanks was the lead actress in the movie Sleepless in Seattle"}
 
+Tom/NNP Hanks/NNP was/VBD the/DT lead/NN actress/NN in/IN the/DT movie/NN Sleepless/NNP in/IN Seattle/NNP
+Phrases and Named Entities
+
+PERSON:
+    Tom/NNP
+PERSON:
+    Hanks/NNP
+GPE:
+    Seattle/NNP
+
 Content words for this sentence are "Tom Hanks", "lead", "actress", "movie", "Sleepless in Seattle". 
 
-Now for actress we will not find any result from Freebase query. So we will get synset of actress from wordnet. Wordnet synset for actress content for actress is \emph{"female actor"}
+While "actress" is a domain in freebase, it does not contain anythingi yet. So we look into the synset of the word "actress" from wordnet, which includes \emph{"female actor"}.
 
-Now for the noun phrase \emph{"sleepless in Seattle"}, we can generate "id" for the query as "sleepless in seattle". But this id will be associated with many properties. To select the relevant property we can use synset obtained from the actress. And this synset has actor, which is one of the property for id "Sleepless in Seattle". Hence the Freebase query can be following:
+Now for the noun phrase \emph{"Sleepless in Seattle"}, we can generate "id" for the query as "sleepless in seattle". But this id will be associated with many properties. To select the relevant property we can use synset obtained from the actress. And this synset has {\em actor}, which is one of the property for id {\em "Sleepless in Seattle"}. Hence the Freebase query can be following:
 
 \begin{lstlisting}
 
@@ -413,7 +400,7 @@ For finding the true statement i.e. the actress we can use all actors obtained i
 \subsubsection{Use of Wikipedia}
 Although structured databases such as Freebase, DBPedia extract the information from Wikipedia and format them into a structured and query-friendly way, it does not contain all the relevant information all the time. For example, consider the following sentence:
 
-\emph{Less Paul invented the electric guitar}
+\emph{Les Paul invented the electric guitar}
 
 The wikipedia page "http://en.wikipedia.org/wiki/Electric\_guitar" contains the inventor of the electric guiter in one of the sentences in the body. But this information is not available in the Freebase. 
 
@@ -422,24 +409,27 @@ We can use a very simple and elegant method to find the relevant information fro
 After getting the wikipedia page we can convert the html file into text file and then we can separate all the sentences in different lines. The sentence is the part of the whole text that exist between two full-stops. Another important observation is that the relevant information will be within the same sentence in the question-answer type sentences almost all the time. So we can match the content words to the sentences extracted from Wikipedia page and verify the truthfulness of the sentence. 
 
 For the example sentence above, after processing the Wikipedia page and matching by inventor we get following two sentences:
+\begin {itemize}
+\item \emph{"Commercial production began in late summer of 1932 by Electro-Patent-Instrument Company Los\_Angeles, a partnership of Adolph\_Rickenbacker, PaulBarth and George\_Beauchamp, the inventor"}
 
-\emph{"Commercial production began in late summer of 1932 by Electro-Patent-Instrument Company Los\_Angeles, a partnership of Adolph\_Rickenbacker, PaulBarth and George\_Beauchamp, the inventor"}
+\item \emph{In a morecontemporary style, Little Willie Joe, the inventor of the Unitar, had a rhythmand\_blues instrumental hit in the 1950s with "Twitchy", recorded with the ReneHall Orchestra}
+\end{itemize}
 
-\emph{In a morecontemporary style, Little Willie Joe, the inventor of the Unitar, had a rhythmand\_blues instrumental hit in the 1950s with "Twitchy", recorded with the ReneHall Orchestra}
-
-Now we can match the doubt unit Les Paul with these two sentences and we will not have any match. Hence we can conclude that the statement is not true. 
+When we do a regular expression search of the $DU$ "Les Paul" in these two sentences, we do not get any match. Hence we can conclude that the statement is not true. 
  
-Moreover, we can also look for truthful statement by using those above extracted sentences. We can POS (Parts-of-Speech) tagger to get the noun phrases and create the list of possible persons that invented the electric guitar and match them with the five alternative sentences given by T-verifier.
+Moreover, we can also look for truthful statement by using those above extracted sentences. Using a better POS tagger and Named entity extractor (may those offered by LingPipe or Standford Named Entity Tagger) we cant extract the noun phrases and create the list of possible $AU$ that matches the data type of the $DU$. A comparison with the $AU$-s generated by the exisiting version of the T-verifier will give us allow us to do a fine grained analysis.
 
 \subsubsection{Use of answer.com}
-We found that answer.com also contains truthful sentences for the doubt sentences in most of the cases. Hence using answer.com seems to be a good idea for the truthfulness verification. We can use similar strategies used for Wikipedia described in the section above.
+We found that answer.com also contains the correct answers to the for the doubt sentences in almost of all the cases. The precise Q\&A format of closely matching the sentences excites us about the possibilites of using the above mentioned strategies for this site. A lot of domain specific sites (like stackexchange.com, quora.com) have become very popular since 2009, which deviate from the traditional forums in the sense that the user generated content is voted, summarised and exposed to a programmatic interface. 
 
-\section{Progress up to now}
-Following are the progress of us in these two weeks
+\section{Progress Summary}
+
+{\em Feb 23 to Mar 9} 
 \begin{itemize}
-\item Formulated the procedure of truthfulness verification in a more structured and robust way compared to the last project proposal report
+\item Formulated the procedure of truthfulness verification in a more structured way
 \item As a result of the procedure formulation, the sections Step-by-step Algorithm for Truthfulness and Verification Examples of Truthfulness Verification are written in a complete revised way compared to the proposal
-\item Read the documentation of the Freebase. The language for querying Freebase is called MQL and it is very complex in learn and apply for big project such as Truthfulness Verification. The documentation itself is also several hundred pages. However, we think that we will be able to use Freebase for our project in a successful way.
+\item Apart from getting out feet wet with the MQL api, the daunting task is to develop generalized framework that is flexible enough to fit the wide variety of sentences into the rigid structure of Freebase. The learning cure is steep, given the richness and massive size of documentation. Though we are groping in dark currently, we are hopeful that the pieces of the puzzle with soon fit in.
+\item Got some initial promising results by exploring beyond ontologies. 
 \end{itemize}
 
 \section{Conclusion}
