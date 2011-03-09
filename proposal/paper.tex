@@ -411,6 +411,26 @@ Here the gender is Male, which contradicts with our gender female. Hence we can 
 For finding the true statement i.e. the actress we can use all actors obtained in the first query result and form second query with their names and output the truthful sentence if we get female as the gender.
 
 \subsubsection{Use of Wikipedia}
+Although structured databases such as Freebase, DBPedia extract the information from Wikipedia and format them into a structured and query-friendly way, it does not contain all the relevant information all the time. For example, consider the following sentence:
+
+\emph{Less Paul invented the electric guitar}
+
+The wikipedia page "http://en.wikipedia.org/wiki/Electric\_guitar" contains the inventor of the electric guiter in one of the sentences in the body. But this information is not available in the Freebase. 
+
+We can use a very simple and elegant method to find the relevant information from Wikipedia by using simple web-scrapping and pattern matching using regular expression. The process is described below.
+
+After getting the wikipedia page we can convert the html file into text file and then we can separate all the sentences in different lines. The sentence is the part of the whole text that exist between two full-stops. Another important observation is that the relevant information will be within the same sentence in the question-answer type sentences almost all the time. So we can match the content words to the sentences extracted from Wikipedia page and verify the truthfulness of the sentence. 
+
+For the example sentence above, after processing the Wikipedia page and matching by inventor we get following two sentences:
+
+\emph{"Commercial production began in late summer of 1932 by Electro-Patent-Instrument Company Los\_Angeles, a partnership of Adolph\_Rickenbacker, PaulBarth and George\_Beauchamp, the inventor"}
+
+\emph{In a morecontemporary style, Little Willie Joe, the inventor of the Unitar, had a rhythmand\_blues instrumental hit in the 1950s with "Twitchy", recorded with the ReneHall Orchestra}
+
+Now we can match the doubt unit Les Paul with these two sentences and we will not have any match. Hence we can conclude that the statement is not true. 
+ 
+Moreover, we can also look for truthful statement by using those above extracted sentences. We can POS (Parts-of-Speech) tagger to get the noun phrases and create the list of possible persons that invented the electric guitar and match them with the five alternative sentences given by T-verifier.
+
 
 \section{Conclusion}
 It this paper, we described current system for truthfulness verification of statements found in the web called T-Verifier and described the possible improvements to the current system. We will primarily use authentic information sources such as Wikipedia and Ontologies extracted from Wikipedia such as FreeBase, DBPedia, and YOGA to found the truthfulness of doubtful statements.  
