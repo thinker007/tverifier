@@ -439,17 +439,13 @@ Contrary to our prior report, Wikipedia does have a very rich API, which the wik
 The first one is Opensearch protocol, which gets pages whose name case-insensitively match a given string. When default limit(10) is reached, results are ordered by number of incoming links. For example if we search for Forrest Gump, we will get:
 
 \begin{lstlisting}[label=Opensearch Protocol, caption=Result using Opensearch]
-[
     * "Forrest Gump"
-      [
           o "Forrest Gump"
           o "Forrest Gump (character)"
           o "Forrest Gump (novel)"
           o "Forrest Gump (soundtrack)"
           o "Forrest Gump – Original Motion Picture Score"
           o "Forrest Gump (disambiguation)"
-      ]
-]
 
 \end{lstlisting}
 
