@@ -43,6 +43,23 @@ URL: http://code.google.com/p/tverifier }
 \maketitle
 
 
+\section{Progress Summary}
+
+{\em Mar 9 to Mar 29}
+\begin{itemize}
+\item Formulated the initial steps for feature extraction for each doubt unit using Wikipedia. See page~[\pageref{March9to29}] of section~\ref{sec:UseOfWikipedia}
+\end{itemize} 
+{\em Feb 23 to Mar 9} 
+\begin{itemize}
+\item Formulated the procedure of truthfulness verification in a more structured way
+\item As a result of the procedure formulation, the sections Step-by-step Algorithm for Truthfulness and Verification Examples of Truthfulness Verification are written in a complete revised way compared to the proposal
+\item Apart from getting out feet wet with the MQL api, the daunting task is to develop generalized framework that is flexible enough to fit the wide variety of sentences into the rigid structure of Freebase. The learning cure is steep, given the richness and massive size of documentation. Though we are groping in dark currently, we are hopeful that the pieces of the puzzle with soon fit in.
+\item Looked into applicability of POS tagger in the context of our problem and found it useful for constructing freebase queries
+\item Got some initial promising results by exploring different options such as Wikipedia, answer.com beyond Freebase ontologies. 
+\item Worked on porting of existing T-verifier code to linux. The original T-verifier code is for windows only and not generic enough at this moment. We also contacted with the student author about the problems we are facing to port the code to linux. We hope to resolve it soon.
+\end{itemize}
+
+
 \section{Introduction}
 Web has became the most prevalent source of information now a days. However, many
 information on the web is untruthful. Also because of the widespread reach of
@@ -64,19 +81,19 @@ resolved to get a more robust truthfulness verification system.
 Current system for truthfulness verification is called T-verifier
 \cite{tverifier}, which uses two phase methods for truthfulness verification of
 statements. Each of these two phases rely heavily on search results returned by
-popular search engines. T-verifier takes the doubtful statements (DS) as input
-from the user along with the doubtful unit (DU). Phrase after removing DU from DS
+popular search engines. T-verifier takes the doubtful statements ($DS$) as input
+from the user along with the doubtful unit (DU). Phrase after removing DU from $DS$
 is called topic unit (TU).
 
 At the first phase, T-verifier generates alternative statements by supplying
 $TU$ to search engine and collecting the relevant alternate $DU$-s. However,
-from basic web search may result in lot of alternate DUs that are not semantically or
-logically relevant to the original DS. Hence, T-verifier uses combination of
-seven features to rank alternate DUs. These features primarily exploit the facts
+from basic web search may result in lot of alternate $DU$-s that are not semantically or
+logically relevant to the original $DS$. Hence, T-verifier uses combination of
+seven features to rank alternate $DU$-s. These features primarily exploit the facts
 that relevant alternative units frequently co-occur, people often mention both
 misconception and truthful conception together, data-type matching, and
 sense-closeness. T-verifier chooses top 5 alternative statements based on top 5
-alternate DUs obtained in this phase.
+alternate $DU$-s obtained in this phase.
 
 At the second phase, top 5 alternative statements from phase 1 is supplied to the
 search engine again. Then the returned searched result is ranked by multiple
@@ -88,7 +105,7 @@ considered as truthful statement.
 % We are currently working to get the T-verifier code running on our systems,
 % with inputs from Xian Li. So the descriptions below lacks some required details
 % and makes some assumptions.   As of now T-Verifier produces 5 alternative
-% statements once it is provided with a doubtful statement (DS), a doubtful unit
+% statements once it is provided with a doubtful statement ($DS$), a doubtful unit
 % (DU), data type of the unit etc in the first phase. Though these sentences
 % produced are quite accurate, the facility to pinpoint the correct alternative
 % does exist yet. The project goal, may be formulated as:  "Extract information
@@ -118,7 +135,7 @@ improvement here to give more weight to the information obtained from trustworth
 sources such as Wikipedia.
 
 
-\section {Propsed System}
+\section {Proposed System}
 
 
 \begin{figure}
@@ -134,7 +151,7 @@ sources such as Wikipedia.
 
 For disambiguation among the alternative statements, Wikipedia is generally used
 as an authoritative source. On the other hand DBpedia, Freebase have organized the
-massive amount of data in a searchable fashion e.g DBpedia uses SPARQL endpoint,
+massive amount of data in a searchable fashion e.g. DBpedia uses SPARQL endpoint,
 Freebase uses MQL api. Open source implementation of Python wrappers exist for
 both the interfaces exist and appear to be mature enough for our needs.
 
@@ -271,7 +288,6 @@ The key point of distinction is that this result set is the set of records from 
 
 \subsection{Examples of Truthfulness Verification}
 
-{\em Wed Mar 9 2011}
 
 \subsubsection{Use of Freebase}
 
@@ -316,7 +332,7 @@ Now for the noun phrase \emph{"Sleepless in Seattle"}, we can generate "id" for 
 
 Now the result of this query returns following output:
 
-{
+
   "code":          "/api/status/ok",
   "result": [{
     "/film/film/starring": [
@@ -357,7 +373,7 @@ Now the result of this query returns following output:
         "actor": "Rita Wilson"
       }
     ],
-    "id": "/en/sleepless_in_seattle"
+    "id": "/en/sleepless_in_Seattle"
   }],
   "status":        "200 OK",
   "transaction_id": "cache;cache03.p01.sjc1:8101;2011-03-09T05:09:44Z;0032"
@@ -394,11 +410,12 @@ Here the gender is Male, which contradicts with our gender female. Hence we can 
 For finding the true statement i.e. the actress we can use all actors obtained in the first query result and form second query with their names and output the truthful sentence if we get female as the gender.
 
 \subsubsection{Use of Wikipedia}
+\label{sec:UseOfWikipedia}
 Although structured databases such as Freebase, DBPedia extract the information from Wikipedia and format them into a structured and query-friendly way, it does not contain all the relevant information all the time. For example, consider the following sentence:
 
 \emph{Les Paul invented the electric guitar}
 
-The wikipedia page "http://en.wikipedia.org/wiki/Electric\_guitar" contains the inventor of the electric guiter in one of the sentences in the body. But this information is not available in the Freebase. 
+The wikipedia page "http://en.wikipedia.org/wiki/Electric\_guitar" contains the inventor of the electric guitar in one of the sentences in the body. But this information is not available in the Freebase. 
 
 We can use a very simple and elegant method to find the relevant information from Wikipedia by using simple web-scrapping and pattern matching using regular expression. The process is described below.
 
@@ -415,18 +432,15 @@ When we do a regular expression search of the $DU$ "Les Paul" in these two sente
  
 %Moreover, we can also look for truthful statement by using those above extracted sentences. Using a better POS tagger and Named entity extractor (may those offered by LingPipe or Standford Named Entity Tagger) we cant extract the noun phrases and create the list of possible $AU$ that matches the data type of the $DU$. A comparison with the $AU$-s generated by the exisiting version of the T-verifier will give us allow us to do a fine grained analysis.
 
+\label{March9to29}
 Contrary to our prior report, Wikipedia does have a very rich API, which the wiki software, Mediawiki provides. Of the various features that this API provides there are two searching mechanisms. 
 
 \subsubsection{Opensearch Protocol}
 The first one is Opensearch protocol, which gets pages whose name case-insensitively match a given string. When default limit(10) is reached, results are ordered by number of incoming links. For example if we search for Forrest Gump, we will get:
 
-\begin{lstlisting}
-
+\begin{lstlisting}[label=Opensearch Protocol, caption=Result using Opensearch]
 [
-
     * "Forrest Gump"
-    *
-      -
       [
           o "Forrest Gump"
           o "Forrest Gump (character)"
@@ -435,7 +449,6 @@ The first one is Opensearch protocol, which gets pages whose name case-insensiti
           o "Forrest Gump – Original Motion Picture Score"
           o "Forrest Gump (disambiguation)"
       ]
-
 ]
 
 \end{lstlisting}
@@ -497,49 +510,58 @@ Of the various properties that a returned result may be decorated with, the two 
 
 \end{itemize}
 
-\begin{lstlisting}
-
-			snippet_split_weights = {}
-        		snippet_splits = split snippets by '<b>...</b>' 
-                        for snippet_split in snippet_splits:
-                                snippet_split_len = length(snippet_split)
-                                snippet_split_match_count = count number of matches in snippet_split
-                                snippet_split_weights[snippet_splits.index(snippet_split)] = snippet_split_match_count/snippet_split_len
-                        snippet_weight = 0
-                        for snippet_split_weight in snippet_split_weights.values():
-                                snippet_weight +=snippet_split_weight
-                        snippet_weight= 0.33*snippet_weight
-
-                        #TITLE
-                        title_match_count = count all matches in result['titlesnippet']
-                        title_len = length(result['title'])
-                        title_weight = title_match_count/title_len
-
-                        #TODO need to determine appropriate wieghts
-                        overall_result_weight = (title_weight+snippet_weight)/2
+\begin{lstlisting}[label=pseudo-code,caption=Feature extraction initial steps]
 
 
-                        if regex_tokenize:
-                                tokenizer = RegexpTokenizer('([A-Z]\.)+|\w+|\$[\d\.]+')
+snippet_split_weights = {}
+snippet_splits = split snippets by '<b>...</b>' 
+for snippet_split in snippet_splits:
+        snippet_split_len = length(snippet_split)
+        snippet_split_match_count = count number of matches in snippet_split
+        snippet_split_weights[snippet_splits.index(snippet_split)] 
+		= snippet_split_match_count/snippet_split_len
+snippet_weight = 0
+for snippet_split_weight in snippet_split_weights.values():
+        snippet_weight +=snippet_split_weight
+snippet_weight= 0.33*snippet_weight
 
-                                snippet_tokens = set(tokenizer.tokenize(snippet))
-                                title_tokens = set(tokenizer.tokenize(result['title']))
-                                doubt_unit_tokens = set(tokenizer.tokenize(doubt_unit))
-                        else:
-                                snippet_tokens = set(lower case the snippet and tokenize by space)
-                                title_tokens = set(lower case the title and tokenize by space)
-                                doubt_unit_tokens = set(lower case the doubt_unit and tokenize by space)
+#TITLE
+title_match_count = count all matches in result['titlesnippet']
+title_len = length(result['title'])
+title_weight = title_match_count/title_len
+
+#TODO need to determine appropriate wieghts
+overall_result_weight = (title_weight+snippet_weight)/2
 
 
-                        found = False
+if regex_tokenize:
+        tokenizer = RegexpTokenizer('([A-Z]\.)+|\w+|\$[\d\.]+')
 
-                        if snippet_tokens.intersection(doubt_unit_tokens):
-                                print "S",';',title_weight,';',snippet_weight,';',overall_result_weight
-                                found = True
-                        if title_tokens.intersection(doubt_unit_tokens):
-                                print "T",';',title_weight,';',snippet_weight,';',overall_result_weight
-                                found = True
+        snippet_tokens = set(tokenizer.tokenize(snippet))
+        title_tokens = set(tokenizer.tokenize(result['title']))
+        doubt_unit_tokens = set(tokenizer.tokenize(doubt_unit))
+else:
+        snippet_tokens = set(lower case the snippet and tokenize by space)
+        title_tokens = set(lower case the title and tokenize by space)
+        doubt_unit_tokens = set(lower case the doubt_unit and tokenize by space)
 
+
+found = False
+
+#If the match is found in the snippet
+if snippet_tokens.intersection(doubt_unit_tokens):
+        print "S",';',title_weight,';',snippet_weight,';',overall_result_weight
+        found = True
+
+#if the match is found in the Title
+if title_tokens.intersection(doubt_unit_tokens):
+        print "T",';',title_weight,';',snippet_weight,';',overall_result_weight
+        found = True
+
+#If no match is found
+if title_tokens.intersection(doubt_unit_tokens):
+        print "N",';',title_weight,';',snippet_weight,';',overall_result_weight
+        found = True
 
 
 \end{lstlisting}
@@ -553,38 +575,16 @@ Currently the code that we have written only checks for presence of the doubt un
 Following are a few high priority bugs we are working on
 
 \begin{itemize}
-\item Better matching: We tried two ways to match the DU-s in the reutrened results, one a conservative approach that would try to tokenize so that abbreviations like "U.S.A" and monetary amounts like "\$23.00" are kept as tokens. In the more relaxed approach the tokens were all lowercased and split by spaces. This obviously is the most crucial part of the entire process and it appears we should have separate strategy based on the data type of the doubt unit.
-\item Building the classifier: We got the data from TREC 9, which is in a question answer format and have finished coverting 100 of the 711 sentences all to statement form with correct answers. Once we have some more sentences labeled we will use it to train a classifier from the features extracted above.
+\item Better matching: We tried two ways to match the DU-s in the returned results, one a conservative approach that would try to tokenize so that abbreviations like "U.S.A" and monetary amounts like "\$23.00" are kept as tokens. In the more relaxed approach the tokens were all lowercased and split by spaces. This obviously is the most crucial part of the entire process and it appears we should have separate strategy based on the data type of the doubt unit.
+\item Building the classifier: We got the data from TREC 9, which is in a question answer format and have finished converting 100 of the 711 sentences all to statement form with correct answers. Once we have some more sentences labeled we will use it to train a classifier from the features extracted above.
 \end{itemize} 
-
-
-
-
-
-
-
-
-
-
 
  
 \subsubsection{Use of answer.com}
-We found that answer.com also contains the correct answers to the for the doubt sentences in almost of all the cases. The precise Q\&A format of closely matching the sentences excites us about the possibilites of using the above mentioned strategies for this site. A lot of domain specific sites (like stackexchange.com, quora.com) have become very popular since 2009, which deviate from the traditional forums in the sense that the user generated content is voted, summarised and exposed to a programmatic interface. 
-
-\section{Progress Summary}
-
-{\em Feb 23 to Mar 9} 
-\begin{itemize}
-\item Formulated the procedure of truthfulness verification in a more structured way
-\item As a result of the procedure formulation, the sections Step-by-step Algorithm for Truthfulness and Verification Examples of Truthfulness Verification are written in a complete revised way compared to the proposal
-\item Apart from getting out feet wet with the MQL api, the daunting task is to develop generalized framework that is flexible enough to fit the wide variety of sentences into the rigid structure of Freebase. The learning cure is steep, given the richness and massive size of documentation. Though we are groping in dark currently, we are hopeful that the pieces of the puzzle with soon fit in.
-\item Looked into applicability of POS tagger in the context of our problem and found it useful for constructing freebase queries
-\item Got some initial promising results by exploring different options such as Wikipedia, answer.com beyond Freebase ontologies. 
-\item Worked on porting of existing T-verifier code to linux. The original T-verifier code is for windows only and not generic enough at this moment. We also contacted with the student author about the problems we are facing to port the code to linux. We hope to resolve it soon.
-\end{itemize}
+We found that answer.com also contains the correct answers to the for the doubt sentences in almost of all the cases. The precise Q\&A format of closely matching the sentences excites us about the possibilities of using the above mentioned strategies for this site. A lot of domain specific sites (like stackexchange.com, quora.com) have become very popular since 2009, which deviate from the traditional forums in the sense that the user generated content is voted, summarised and exposed to a programmatic interface. 
 
 
-{\em Mar 9 to Mar 29} 
+
 \begin{itemize}
 \item 
 \end{itemize}
