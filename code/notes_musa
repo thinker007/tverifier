@@ -1,0 +1,29 @@
+Freebase
+=============
+[{
+  "id" : "/en/sleepless_in_seattle"
+  "/film/film/starring" : [{ "actor" : null }]
+}]  
+
+
+[{
+  "id" : "/en/meg_ryan"
+  "/people/person/gender" : {}
+}]
+
+
+http://wordnet.freebaseapps.com/index?word=actress
+gives actress=female actor 
+
+take female to match with gender and actor to match with sleepless in seattle
+
+
+Wikipedia:
+===============
+Wikipedia lists the inventors of electric guiter but it is not available in freebase... may need text processing.. one approach may be extract the whole sentence from wikipedia (using full-stops as merker) and then match words
+http://en.wikipedia.org/wiki/Electric_guitar
+
+cat /tmp/webpage | tr -d "\n" | tr "." "\n" | egrep -i inventor
+after getting the line if we grep by names then this will verify that Les Paul is not the inventor. Now to find the actual inventor match all the words with top 5 statements. We can even go further by looking for all words if they are not in dictinary. If not then it must be name and we can show that as output
+
+
