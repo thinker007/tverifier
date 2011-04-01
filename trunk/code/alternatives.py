@@ -4,11 +4,11 @@ import pprint
 import json
 import sys
 
-key = 'ABQIAAAAEuwUqFVvNIBr6HOzKB5bChSGGgjgYoKsPC_UEFoR883JYNo--hT8ZBr59TKTjdX9ld3fA5qBFkYTuw'
+key = '####'
 
 query = 'Barack Obama is'
 
-GOOG_URL = 'https://www.googleapis.com/customsearch/v1?key=AIzaSyAFVODOihDHDoqZS1aDG_xZ2_hCtGKXf7o&cx=017576662512468239146:omuauf_lfve'
+GOOG_URL = 'https://www.googleapis.com/customsearch/v1?key=####'
 
 def showresults(doubtstmt):
 	query = urllib.urlencode({'q':doubtstmt})
@@ -35,7 +35,6 @@ def customsearch(doubtstmt, **srch_args):
 			})
 	url = GOOG_URL + '&' + urllib.urlencode(srch_args)
 	print url
-	#url = 	'https://www.googleapis.com/customsearch/v1?key=AIzaSyAFVODOihDHDoqZS1aDG_xZ2_hCtGKXf7o&cx=017576662512468239146:omuauf_lfve&q=lectures' #&callback=handleResponse'
 	response = urllib2.urlopen(url)
 	data = json.load(response)
 	for item in data['items']:
