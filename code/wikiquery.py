@@ -1,9 +1,11 @@
 from __future__ import division
+import nltk
 from nltk.corpus import stopwords
 import urllib
 import pprint
 import simplejson
 import re
+import itertools
 
 url = 'http://en.wikipedia.org/w/api.php?action=list'
 #
@@ -22,15 +24,16 @@ def stop_removed():
 			tu_stop_removed = ''
 	        	for word in tu.split(' '):
 	            		if word not in stopset:
-	                		tu_stop_removed +=word+' '
+	                		tu_stop_removed +=word.strip('\n')+' '
 			sentences.update({du:tu_stop_removed}) 
 #	print sentences
 	return sentences
 
-if __name__=="__main__":
+def wikisearch():
 	topic_units = stop_removed()
 	for doubt_unit, topic_unit in topic_units.iteritems():
 	 	print doubt_unit,';',topic_unit.rstrip("\n")
+		
 
 
 #http://en.wikipedia.org/w/api.php?
@@ -117,10 +120,45 @@ def rte_features(rtepair):
 
 
 def POS_tag():
-	for line in open('doubtful_statement.txt'):
-	        a,b,c,d,e,f = map(str, line.split('\t'))
-	        text1 = nltk.word_tokenize(b)
-	        text2 = nltk.word_tokenize(c)
+	for line in open('DU_TU.5.txt'):
+	        a,b = map(str, line.split('\t'))
+	        text1 = nltk.word_tokenize(a)
+	        text2 = nltk.word_tokenize(b)
 	        print nltk.pos_tag(text1)
 	        print nltk.pos_tag(text2)
 
+def phrase_extraction():
+	#wikisearch()
+	url = 'http://en.wikipedia.org/w/api.php?action=query'
+
+	for line in open('DU_TU.5.txt'):
+	        du,tu = map(str, line.split('\t'))
+		tu = tu.split(' ')
+		if tu != None:
+			print tu, len(tu)
+			for i in range(len(tu),1,-1):
+				phrases = itertools.combinations(tu,i)
+				for phrase in phrases:
+					string = ''
+					for word in phrase:
+						string += word.strip('\n')+ ' '
+					srch_args = {'format':'json',
+		      					'inprop':'displaytitle|url',
+							'titles':string,
+							'prop':'info|categories'
+							}
+					url_srch = url + '&' + urllib.urlencode(srch_args)
+					results = simplejson.load(urllib.urlopen(url_srch))
+					
+					for result in results['query']['pages']:
+						if int(result)>-1:
+							print results['query']['pages'][result]['title']
+							print results['query']['pages'][result]['fullurl']
+							if results['query']['pages'][result].has_key('categories'):
+								for category in results['query']['pages'][result]['categories']:
+									print category['title']
+							
+		 				
+
+if __name__ == '__main__':
+	phrase_extraction()
