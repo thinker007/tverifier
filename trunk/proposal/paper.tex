@@ -589,6 +589,36 @@ The attached file shows the data collected for each sentence from wikipedia. We 
 We found that answer.com also contains the correct answers to the for the doubt sentences in almost of all the cases. The precise Q\&A format of closely matching the sentences excites us about the possibilities of using the above mentioned strategies for this site. A lot of domain specific sites (like stackexchange.com, quora.com) have become very popular since 2009, which deviate from the traditional forums in the sense that the user generated content is voted, summarised and exposed to a programmatic interface. 
 
 
+\section{Ranking Algorithm 2}
+The main idea behind this ranking algorithm for alternative units is that Wikipedia should contain content words from doubt statement in the same sentence because of the similarity in the context. Details description of the algorithm is given below.
+
+
+\begin{algorithm}
+\small
+\caption{Ranking Algorithm 2}
+\label{alg:AssignScore} 
+\begin{algorithmic}
+\STATE Search google with topic unit
+\STATE take first Wikipedia page from google search result
+\STATE Extract all sentences from the Wikipedia page
+\FOR{each alternate unit}
+	\FOR{each sentence from Wikipedia page}
+		\IF{alternate unit is found in the sentence}
+			\IF{some content word found in the sentence}
+				\STATE return true
+			\ELSE
+				\STATE return false	
+			\ENDIF
+		\ENDIF
+	\ENDFOR
+\ENDFOR		
+\STATE assign same score to all true matches
+
+\end{algorithmic}
+\end{algorithm}
+
+
+
 
 \begin{itemize}
 \item 
