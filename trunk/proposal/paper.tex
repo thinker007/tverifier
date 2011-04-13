@@ -617,12 +617,26 @@ The main idea behind this ranking algorithm for alternative units is that Wikipe
 \end{algorithmic}
 \end{algorithm}
 
+\subsection{Examples}
+Examples of the algorithm described above is discussed below. The algorithm 2 produce perfect result for three of the five sentences. But it struggles with the remaining two sentences. However, the algorithm 2 primarily augment the algorithm 1 and add strength to the results from algorithm 1. Hence they work better together and produce overall better output.
+
+\subsubsection{Tom Hanks was the lead actress  int move 'Sleepless in Seattle'}
+The alternative units for this sentence are "Tom Hanks", "Meg Ryan", "Hanks Meg", "Nora", and "Sam". Here the sentence containing "Tom Hanks" contain the word actor but not actress. So the algorithm classify it as false. But the sentence containing "Meg Ryan" has the word actress and hence classify it as true. For other alternative units, we don't even get any sentences containing the alternative unit. So the algorithm produce an unambiguous single true statement for this sentence.
+
+\subsubsection{Les Paul invented the electric guitar}
+The alternative units for this sentence are "Les Paul", "rickenbacker", "Gibson", "Leo", and "Lloyd". Now there is inherent ambiguity about the true inventor of the electric guitar. And Wikipedia does not specify rickenbacker as the inventor of electric guitar. Rather it specify Les Paul as the inventor in several places. Our algorithm unambigiously classify Les Paul as inventor of electric guitar in a similar way for the Sleepless in Seattle case described in the previous subsection. 
+
+\subsubsection{Luna 2 is the first spacecraft on the moon}
+The alternative units for this sentence are "Luna 2", "Apollo", "Land", "Landing", and "Nasa". Our algorithm returns true for both Luna 2 and Apollo and return false for all others. Now, both Luna 2 and Apollo are in reality true considering the facts that Luna 2 was the first unmanned spacecraft and Apollo was the first manned spacecraft. Hence, we can't say one of the Luna 2 or Apollo as false if farther information is not given. So algorithm 2 can produce correct result for this sentence also.
+
+\subsubsection{English is the Primary Language of the Philippines}
+The alternative units for this sentence are "English", "Filipino", "Spanish", "Education", and "History". Our current algorithm struggle with this sentence because of occurrence of content words and alternative units in the same sentence for all the alternative units. So it classify all of them as true and assign same weight to all of them. However, as our algorithm 1 can rank the alternative units in correct order, merged rank from algorithm 1 and algorithm 2 is still correct and produce overall correct result. 
+
+\subsubsection{Sullivan is the fastest swimmer in the world}
+The alternative units for this sentence are "Sullivan", "Michael phelps", "ALexander", "Long", and "Ernest". Similar to the previous sentence, the algorithm 2 can not produce good ranking for for this sentence. However, our algorithm 1 produces correct ranking and together they produce overall correct result
 
 
 
-\begin{itemize}
-\item 
-\end{itemize}
 \section{Conclusion}
 It this paper, we described current system for truthfulness verification of statements found in the web called T-Verifier and described the possible improvements to the current system. We will primarily use authentic information sources such as Wikipedia and Ontologies extracted from Wikipedia such as FreeBase, DBPedia, and YOGA to found the truthfulness of doubtful statements.  
 
