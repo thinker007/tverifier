@@ -135,28 +135,39 @@ def phrase_extraction():
 	        du,tu = map(str, line.split('\t'))
 		tu = tu.split(' ')
 		if tu != None:
-			print tu, len(tu)
-			for i in range(len(tu),1,-1):
-				phrases = itertools.combinations(tu,i)
-				for phrase in phrases:
-					string = ''
-					for word in phrase:
-						string += word.strip('\n')+ ' '
-					srch_args = {'format':'json',
-		      					'inprop':'displaytitle|url',
+			print ' '.join(tu)
+			strings = []
+			for i in range(len(tu)):
+				for j in range(i+1,len(tu)+1):
+					strings.append(' '.join(tu[i:j]))
+			#print "Strings generated:",strings, "\n------\n"
+			for string in strings:
+				string = string.strip('\n')
+				if string.find(' ')==-1:
+					if string in ['is','was','the','in','not','be', 'of']:
+						continue
+				srch_args = {'format':'json',
+		   					'inprop':'displaytitle|url',
 							'titles':string,
-							'prop':'info|categories'
+							'prop':'info|categories',
+							'redirects':'',	
 							}
-					url_srch = url + '&' + urllib.urlencode(srch_args)
-					results = simplejson.load(urllib.urlopen(url_srch))
-					
-					for result in results['query']['pages']:
-						if int(result)>-1:
-							print results['query']['pages'][result]['title']
-							print results['query']['pages'][result]['fullurl']
-							if results['query']['pages'][result].has_key('categories'):
-								for category in results['query']['pages'][result]['categories']:
-									print category['title']
+				url_srch = url + '&' + urllib.urlencode(srch_args)
+				results = simplejson.load(urllib.urlopen(url_srch))
+				
+				for result in results['query']['pages']:
+					if int(result)>-1:
+						print '%s,%s,%s' % (string.rjust(30) ,
+							results['query']['pages'][result]['title'].rjust(30),
+							results['query']['pages'][result]['fullurl'].rjust(50))
+						wiki_url = results['query']['pages'][result]['fullurl']
+						wiki_url = url.replace('/wiki/','/wiki/index.php?action=raw&title=')
+						content = urllib.urlopen(wiki_url).read()
+						m = re.search(du,content,re.I)
+						if m is not None: print "Doubt unit found at",m.span()
+						#if results['query']['pages'][result].has_key('categories'):
+						#	for category in results['query']['pages'][result]['categories']:
+								#print category['title']
 							
 		 				
 
