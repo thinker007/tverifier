@@ -131,8 +131,17 @@ def phrase_extraction():
 	#wikisearch()
 	url = 'http://en.wikipedia.org/w/api.php?action=query'
 
-	for line in open('DU_TU.5.txt'):
-	        du,tu = map(str, line.split('\t'))
+	 with open('alter_units.txt') as f:
+	        while True:
+			try:
+				sentenceid, tu, au = map(str, f.readline().split('\t'))
+				if sentenceid == prev_sentenceid:
+					au_list.append(au)
+				else:
+					prev_sentenceid = sentenceid
+					au_list = [au]
+			except:
+				
 		tu = tu.split(' ')
 		if tu != None:
 			print ' '.join(tu)
@@ -144,7 +153,7 @@ def phrase_extraction():
 			for string in strings:
 				string = string.strip('\n')
 				if string.find(' ')==-1:
-					if string in ['is','was','the','in','not','be', 'of']:
+					if string in ['is','was','the','in','not','be', 'of', 'on']:
 						continue
 				srch_args = {'format':'json',
 		   					'inprop':'displaytitle|url',
@@ -162,14 +171,19 @@ def phrase_extraction():
 							results['query']['pages'][result]['fullurl'].rjust(50))
 						wiki_url = results['query']['pages'][result]['fullurl']
 						wiki_url = url.replace('/wiki/','/wiki/index.php?action=raw&title=')
-						content = urllib.urlopen(wiki_url).read()
-						m = re.search(du,content,re.I)
-						if m is not None: print "Doubt unit found at",m.span()
+						
+						#reading contents
+						#content = urllib.urlopen(wiki_url).read()
+						#m = re.search(du,content,re.I)
+						#if m is not None: print "Doubt unit found at",m.span()
+						
+						# query for categories
 						#if results['query']['pages'][result].has_key('categories'):
 						#	for category in results['query']['pages'][result]['categories']:
 								#print category['title']
 							
-		 				
+		 				tu[results['query']['pages'][result]['title']]= results['query']['pages'][result]['fullurl']
+						
 
 if __name__ == '__main__':
 	phrase_extraction()
