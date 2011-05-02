@@ -159,7 +159,7 @@ def wiki_lookup(tu):
 		for string in strings:
 			string = string.strip('\n')
 			if string.find(' ')==-1:
-				if string in ['is','was','the','in','not','be', 'of', 'on', 'a']:
+				if string.lower() in ['is','was','the','in','not','be', 'of', 'on', 'a']:
 					continue
 			srch_args = {'format':'json',
 	   					'inprop':'displaytitle|url',
@@ -172,22 +172,26 @@ def wiki_lookup(tu):
 			
 			for result in results['query']['pages']:
 				if int(result)>-1:
-					print '%s,%s,%s' % (string.rjust(30) ,
+					# Iterate thtough all the categories and set flag to true if 
+					# the page is a disambiguation page
+					if results['query']['pages'][result].has_key('categories'):
+						disambig_flag = False
+						for category in results['query']['pages'][result]['categories']:
+							if category['title'].lower().find('disambiguation') != -1:
+								disambig_flag = True			
+					print '%s,%s,%s,%s' % (string.rjust(30),
 						results['query']['pages'][result]['title'].rjust(30),
-						results['query']['pages'][result]['fullurl'].rjust(50))
-					wiki_url = results['query']['pages'][result]['fullurl']
-					wiki_url = url.replace('/wiki/','/wiki/index.php?action=raw&title=')
+						results['query']['pages'][result]['fullurl'].rjust(60), str(disambig_flag).rjust(15))
+								
+				#wiki_url = results['query']['pages'][result]['fullurl']
+				#wiki_url = url.replace('/wiki/','/wiki/index.php?action=raw&title=')
 					
 					#reading contents
 					#content = urllib.urlopen(wiki_url).read()
 					#m = re.search(du,content,re.I)
 					#if m is not None: print "Doubt unit found at",m.span()
 					
-					# query for categories
-					#if results['query']['pages'][result].has_key('categories'):
-					#	for category in results['query']['pages'][result]['categories']:
-					#		print category['title']
-								
+			
 			 				#tu[results['query']['pages'][result]['title']] = results['query']['pages'][result]['fullurl']
 				
 
