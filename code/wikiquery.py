@@ -129,61 +129,68 @@ def POS_tag():
 
 def phrase_extraction():
 	#wikisearch()
-	url = 'http://en.wikipedia.org/w/api.php?action=query'
+	for line in open('alterunits2.txt'):
+        	try:
+			sentenceid, tu, au1, au2, au3, au4, au5 = map(str, line.split('\t'))
+                	print "TU:",tu , "\n(1)",au1, "\n(2)",au2, "\n(3)",au3, "\n(4)",au4, "\n(5)",au5
+			wiki_lookup(tu)
+			wiki_lookup(au2.strip())
+			wiki_lookup(au3.strip())
+			wiki_lookup(au4.strip())
+			wiki_lookup(au5.strip())
+		except:
+			pass					
+def convert(name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1 \2', s1).lower()
 
-	 with open('alter_units.txt') as f:
-	        while True:
-			try:
-				sentenceid, tu, au = map(str, f.readline().split('\t'))
-				if sentenceid == prev_sentenceid:
-					au_list.append(au)
-				else:
-					prev_sentenceid = sentenceid
-					au_list = [au]
-			except:
+
+def wiki_lookup(tu):
+	url = 'http://en.wikipedia.org/w/api.php?action=query'
+	tu = tu.split(' ')
+	if tu != None:
+		print ' '.join(tu)
+		strings = []
+		for i in range(len(tu)):
+			for j in range(i+1,len(tu)+1):
+				strings.append(' '.join(tu[i:j]))
+				strings.append(' '.join(tu[i:j]).title())
+		print "Strings generated:",strings, "\n------\n"
+		for string in strings:
+			string = string.strip('\n')
+			if string.find(' ')==-1:
+				if string in ['is','was','the','in','not','be', 'of', 'on', 'a']:
+					continue
+			srch_args = {'format':'json',
+	   					'inprop':'displaytitle|url',
+						'titles':string,
+						'prop':'info|categories',
+						'redirects':'',	
+						}
+			url_srch = url + '&' + urllib.urlencode(srch_args)
+			results = simplejson.load(urllib.urlopen(url_srch))
+			
+			for result in results['query']['pages']:
+				if int(result)>-1:
+					print '%s,%s,%s' % (string.rjust(30) ,
+						results['query']['pages'][result]['title'].rjust(30),
+						results['query']['pages'][result]['fullurl'].rjust(50))
+					wiki_url = results['query']['pages'][result]['fullurl']
+					wiki_url = url.replace('/wiki/','/wiki/index.php?action=raw&title=')
+					
+					#reading contents
+					#content = urllib.urlopen(wiki_url).read()
+					#m = re.search(du,content,re.I)
+					#if m is not None: print "Doubt unit found at",m.span()
+					
+					# query for categories
+					#if results['query']['pages'][result].has_key('categories'):
+					#	for category in results['query']['pages'][result]['categories']:
+					#		print category['title']
+								
+			 				#tu[results['query']['pages'][result]['title']] = results['query']['pages'][result]['fullurl']
 				
-		tu = tu.split(' ')
-		if tu != None:
-			print ' '.join(tu)
-			strings = []
-			for i in range(len(tu)):
-				for j in range(i+1,len(tu)+1):
-					strings.append(' '.join(tu[i:j]))
-			#print "Strings generated:",strings, "\n------\n"
-			for string in strings:
-				string = string.strip('\n')
-				if string.find(' ')==-1:
-					if string in ['is','was','the','in','not','be', 'of', 'on']:
-						continue
-				srch_args = {'format':'json',
-		   					'inprop':'displaytitle|url',
-							'titles':string,
-							'prop':'info|categories',
-							'redirects':'',	
-							}
-				url_srch = url + '&' + urllib.urlencode(srch_args)
-				results = simplejson.load(urllib.urlopen(url_srch))
-				
-				for result in results['query']['pages']:
-					if int(result)>-1:
-						print '%s,%s,%s' % (string.rjust(30) ,
-							results['query']['pages'][result]['title'].rjust(30),
-							results['query']['pages'][result]['fullurl'].rjust(50))
-						wiki_url = results['query']['pages'][result]['fullurl']
-						wiki_url = url.replace('/wiki/','/wiki/index.php?action=raw&title=')
-						
-						#reading contents
-						#content = urllib.urlopen(wiki_url).read()
-						#m = re.search(du,content,re.I)
-						#if m is not None: print "Doubt unit found at",m.span()
-						
-						# query for categories
-						#if results['query']['pages'][result].has_key('categories'):
-						#	for category in results['query']['pages'][result]['categories']:
-								#print category['title']
-							
-		 				tu[results['query']['pages'][result]['title']]= results['query']['pages'][result]['fullurl']
-						
+
 
 if __name__ == '__main__':
 	phrase_extraction()
