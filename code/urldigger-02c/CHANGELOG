@@ -1,0 +1,12 @@
+0.2c   [21/10/2010] - Added 'crawling' feature.
+					- Added option to check urls against google SAFEBROWSING service, this option is
+					  for test purposes. Please use with caution 
+					- Added option to crawl a site and check each url resultant against google SAFEBROWSING service.
+					- Disabled alexa option
+					- Due to changes in Google searchs, the google search option is currently limited to 10 results
+
+0.2b   [07/06/2010] - Several options organized. Added options to look at SPAM and PHISHING in the results. Minor improvements.
+0.2    [19/05/2010] - Fix in xgoogle library due to changes in Google Interface
+                      Malware list function disabled due to web scrapping restriction in the site
+
+0.1    [1/02/2010] -  urldigger initial release.
