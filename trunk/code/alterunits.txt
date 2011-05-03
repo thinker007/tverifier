@@ -31,7 +31,7 @@
 31	is california's state bird	quail	lists	list	flower	online
 32	is the largest city in germany	berlin	hamburg	munich	port	stuttgart
 33	lou gehrig played consecutive baseball games	2130	2632	2	2130th	15
-34	michael is the fastest swimmer in the world	michael	alexander	sullivan	long	ernest
+34	is the fastest swimmer in the world	michael	alexander	sullivan	long	ernest
 35	astronauts have been on the moon	12	2	20	17	1
 36	is the greek god of the sea	poseidon	mythology	ancient	facts	neptune
 37	china's first nuclear test in	1964	1550	1980	1996	1960s
