@@ -5,7 +5,7 @@
 05	invented the electric guitar	les paul	gibson les	leo	llyod	adolph rickenbacker
 06	the biggest producer of tungsten is	china	north	russia	portugal	australia
 07	london's docklands light railway was constructed in	2009	1987	
-08	nora is lead actress in the movie sleepless in seattle	hanks meg	meg ryan	tom hanks	nora	sam
+08	lead actress in the movie sleepless in seattle	hanks meg	meg ryan	tom hanks	nora	sam
 09	the brightest star visible from earth is	sirius	sky	light	deneb	night
 10	mount is the highest mountain in africa	kilimanjaro	peak	climbing	second	climb
 11	is first private citizen to fly in space	ronald reagan	christa mcauliffe	dennis	august	richard
