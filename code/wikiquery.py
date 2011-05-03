@@ -134,10 +134,10 @@ def phrase_extraction():
 			sentenceid, tu, au1, au2, au3, au4, au5 = map(str, line.split('\t'))
                 	print "TU:",tu , "\n(1)",au1, "\n(2)",au2, "\n(3)",au3, "\n(4)",au4, "\n(5)",au5
 			wiki_lookup(tu)
-			wiki_lookup(au2.strip())
-			wiki_lookup(au3.strip())
-			wiki_lookup(au4.strip())
-			wiki_lookup(au5.strip())
+			wiki_lookup(au2.strip(), tu)
+			wiki_lookup(au3.strip(), tu)
+			wiki_lookup(au4.strip(), tu)
+			wiki_lookup(au5.strip(), tu)
 		except:
 			pass					
 def convert(name):
@@ -145,7 +145,9 @@ def convert(name):
     return re.sub('([a-z0-9])([A-Z])', r'\1 \2', s1).lower()
 
 
-def wiki_lookup(tu):
+
+
+def wiki_lookup(*tu):
 	url = 'http://en.wikipedia.org/w/api.php?action=query'
 	tu = tu.split(' ')
 	if tu != None:
@@ -178,7 +180,8 @@ def wiki_lookup(tu):
 						disambig_flag = False
 						for category in results['query']['pages'][result]['categories']:
 							if category['title'].lower().find('disambiguation') != -1:
-								disambig_flag = True			
+								disambig_flag = True
+								extract_links(			
 					print '%s,%s,%s,%s' % (string.rjust(30),
 						results['query']['pages'][result]['title'].rjust(30),
 						results['query']['pages'][result]['fullurl'].rjust(60), str(disambig_flag).rjust(15))
@@ -195,6 +198,23 @@ def wiki_lookup(tu):
 			 				#tu[results['query']['pages'][result]['title']] = results['query']['pages'][result]['fullurl']
 				
 
+def extract_links():
+	dp = 'http://en.wikipedia.org/w/index.php?action=raw&title=Alice'
+	import urllib2
+	from BeautifulSoup import BeautifulSoup
+	
+	f = urllib2.urlopen(dp).read()
+	soup = BeautifulSoup(f)
+	
+	wikilink_rx = re.compile(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]')
+	
+	links = soup.string.splitlines()
+	for link in links:
+		l = wikilink_rx.sub(r'\1',link)
+		if '*' in l:
+			print l
+	
 
 if __name__ == '__main__':
-	phrase_extraction()
+	#phrase_extraction()
+	extract_links()
