@@ -1,0 +1,48 @@
+01	there are calories in a big mac	540	29	1	10	2
+02	people died when the estonia sank in 1994	852	28	850	150	900
+03	belize located in	central america		guatemala	mexico	north	caribbean sea
+04	montana become a state in	1889
+05	invented the electric guitar	les paul	gibson les	leo	llyod	adolph rickenbacker
+06	the biggest producer of tungsten is	china	north	russia	portugal	australia
+07	london's docklands light railway was constructed in	2009	1987	
+08	nora is lead actress in the movie sleepless in seattle	hanks meg	meg ryan	tom hanks	nora	sam
+09	the brightest star visible from earth is	sirius	sky	light	deneb	night
+10	mount is the highest mountain in africa	kilimanjaro	peak	climbing	second	climb
+11	is first private citizen to fly in space	ronald reagan	christa mcauliffe	dennis	august	richard
+12	river is the longest river in the united states	mississippi	missouri	nile	arkansas	minnesota
+13	is the first american in space	alan shepard	sally	sally kristen	august	yuri
+14	nixon visited china in	1972	1971	1987
+15	liu won the nobel peace prize in 1991	liu	san suu	suu kyi	kyi burma	aung san
+16	microsoft's corporate headquarters locates in	new jersey	new zealand	redmond	seattle	virginia
+17	people died in the china airlines' crash in nagoya japan	264	140	26	232	5
+18	released the internet worm in the late 1980s	morris	roberts	page	pandora
+19	the largest city of california is	los angeles	san jose	united states	sacramento	valley
+20	is the first spacecraft on the moon	apollo	land	landing	nasa	luna
+21	is the primary language of the philippines	english	filipino	spanish	education	history
+22	the biggest city of italy is	rome	milan	naples	florence	genoa
+23	is farthest planet from the sun	neptune	pluto	system	its	orbit
+24	the life expectancy of an elephant is years	60	70	14	30	80
+25	nickname of pennsylvania is state	keystone	answer	facts	motto	states
+26	is california's state tree	redwood	sequoia	official	park
+27	the bridge over the river kwai is in	thailand	bangkok	sri lanka	burma	india
+28	is the architect of central park	frederick	olmsted	emery	art	sydney
+29	an expectant mother should get mcg folic acid daily	400	800	4	500	04
+30	is president grover cleveland's wife	frances folsom	frances	young frances	lady frances	frances clara	
+31	is california's state bird	quail	lists	list	flower	online
+32	is the largest city in germany	berlin	hamburg	munich	port	stuttgart
+33	lou gehrig played consecutive baseball games	2130	2632	2	2130th	15
+34	michael is the fastest swimmer in the world	michael	alexander	sullivan	long	ernest
+35	astronauts have been on the moon	12	2	20	17	1
+36	is the greek god of the sea	poseidon	mythology	ancient	facts	neptune
+37	china's first nuclear test in	1964	1550	1980	1996	1960s
+38	is the famous battle in 1836 between texas and mexico	alamo	independence	march	war	history
+40	are descendents of dinosaurs	dinosaurs	modern	answers	evidence	
+41	hexagons are on a soccer ball	20	12	32	60	8
+42	the valley of the kings is	egypt	west bank	nile	prussia	africa
+44	joe dimaggio compile his 56-game hitting streak in 1941	2009	1933	1914	1939
+45	the first u.s. president ever to resign	richard	john	calhoun	gerald	barak obama
+46	alice cooper's real name is	vincent furnier	vincent	vincent damoni	star vincent	damon furnier
+47	there are continents	7	5	6	2	3
+48	invented basketball	naismith	james naismith	naismith james	long	winter
+49	flush toilet was invented in	1596	1738	1775	1980	1800s
+50	is the longest river in the world	nile	amazon	africa	mississippi	south
