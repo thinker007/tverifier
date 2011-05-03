@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#FILE="alterunits2.txt"
-FILE="alterunits.txt"
+FILE="alterunits2.txt"
+#FILE="alterunits.txt"
 
 #$1=serial
 #$2=topic unit
