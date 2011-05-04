@@ -355,7 +355,7 @@ For this sentence, the alternative units are les paul, gibson les, llyod, leo, a
 
 ['invented', 'Invented', 'invented the', 'Invented The', 'invented the electric', 'Invented The Electric', 'invented the electric guitar', 'Invented The Electric Guitar', 'the', 'The', 'the electric', 'The Electric', 'the electric guitar', 'The Electric Guitar', 'electric', 'Electric', 'electric guitar', 'Electric Guitar', 'guitar', 'Guitar'] 
 
-Now for each k-gram we find relevant wikipedia page. We will not get any wikipedia page for irrelevant k-gram combination.  Moreover, We may get a page directly or we may need to disambiguate. Following are the all relevant pages. The False in the second column page there is no ambiguation and True means we need to disambiguate.
+Now for each k-gram we find relevant wikipedia page. We will not get any wikipedia page for irrelevant k-gram combination.  Moreover, We may get a page directly or we may need to disambiguate. Following are the all relevant pages. The False in the second column means there is no ambiguation and True means we need to disambiguate.
 
 \url{http://en.wikipedia.org/wiki/Invention}, False\\
 \url{http://en.wikipedia.org/wiki/The_Electric}, True \\
@@ -364,7 +364,7 @@ Now for each k-gram we find relevant wikipedia page. We will not get any wikiped
 \url{http://en.wikipedia.org/wiki/Electric_guitar}, False \\
 \url{http://en.wikipedia.org/wiki/Guitar}, False
 
-For the above pages, we need to disambiguate for one page only and that is \url{http://en.wikipedia.org/wiki/The_Electric}. We described earlier that we look into the count of overlap between topic unit words and disambiguation link description words. For this disambiguation there is no overlap and so we do not need to process this page further. Hence the final set of $n$ pages are following:
+For the above pages, we need to disambiguate for one page only and that is \url{http://en.wikipedia.org/wiki/The_Electric}. We described earlier that we look into the count of overlap between topic unit words and disambiguation link description words. For this disambiguation there is no overlap and so we do not need to process this page further. Hence the final set of $n$ pages for the topic unit are following:
 
 \url{http://en.wikipedia.org/wiki/Invention} \\
 \url{http://en.wikipedia.org/wiki/Electric_guitar} \\
