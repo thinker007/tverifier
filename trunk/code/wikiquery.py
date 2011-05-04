@@ -6,6 +6,7 @@ import pprint
 import simplejson
 import re
 import itertools
+import traceback
 
 url = 'http://en.wikipedia.org/w/api.php?action=list'
 #
@@ -132,14 +133,17 @@ def phrase_extraction():
 	for line in open('alterunits2.txt'):
         	try:
 			sentenceid, tu, au1, au2, au3, au4, au5 = map(str, line.split('\t'))
-                	print "TU:",tu , "\n(1)",au1, "\n(2)",au2, "\n(3)",au3, "\n(4)",au4, "\n(5)",au5
+                	print "Topic unit is:",tu 
+			print "Alternate units are:", "\n(1)",au1, "\n(2)",au2, "\n(3)",au3, "\n(4)",au4, "\n(5)",au5
+			print "Find articles from Topic unit:"
 			wiki_lookup(tu)
+			print "Find articles from Alternate unit:"
 			wiki_lookup(au2.strip(), tu)
 			wiki_lookup(au3.strip(), tu)
 			wiki_lookup(au4.strip(), tu)
 			wiki_lookup(au5.strip(), tu)
 		except:
-			pass					
+			print traceback.print_stack()						
 def convert(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1 \2', s1).lower()
@@ -147,17 +151,25 @@ def convert(name):
 
 
 
-def wiki_lookup(*tu):
+def wiki_lookup(*args):
 	url = 'http://en.wikipedia.org/w/api.php?action=query'
-	tu = tu.split(' ')
-	if tu != None:
-		print ' '.join(tu)
+	if len(args)==2:
+		topic_unit = args[1]
+	unit = args[0]
+
+	unit = unit.split(' ')
+	if unit != None:
+		#print ' '.join(tu)
 		strings = []
-		for i in range(len(tu)):
-			for j in range(i+1,len(tu)+1):
-				strings.append(' '.join(tu[i:j]))
-				strings.append(' '.join(tu[i:j]).title())
-		print "Strings generated:",strings, "\n------\n"
+		for i in range(len(unit)):
+			for j in range(i+1,len(unit)+1):
+				strings.append(' '.join(unit[i:j]))
+				strings.append(' '.join(unit[i:j]).title())
+		print "Shingles generated from the topic unit:\n",strings, "\n------\n"
+		print '%s %s %s %s' % ('Shingle'.rjust(30),'Article Title'.rjust(30),'URL'.rjust(60),'Disambiguation'.rjust(15))	
+		print '-'*150
+
+		unit_dict = {'':''}
 		for string in strings:
 			string = string.strip('\n')
 			if string.find(' ')==-1:
@@ -171,7 +183,7 @@ def wiki_lookup(*tu):
 						}
 			url_srch = url + '&' + urllib.urlencode(srch_args)
 			results = simplejson.load(urllib.urlopen(url_srch))
-			
+		
 			for result in results['query']['pages']:
 				if int(result)>-1:
 					# Iterate thtough all the categories and set flag to true if 
@@ -181,14 +193,36 @@ def wiki_lookup(*tu):
 						for category in results['query']['pages'][result]['categories']:
 							if category['title'].lower().find('disambiguation') != -1:
 								disambig_flag = True
-								extract_links(			
+				
 					print '%s,%s,%s,%s' % (string.rjust(30),
 						results['query']['pages'][result]['title'].rjust(30),
 						results['query']['pages'][result]['fullurl'].rjust(60), str(disambig_flag).rjust(15))
 								
-				#wiki_url = results['query']['pages'][result]['fullurl']
-				#wiki_url = url.replace('/wiki/','/wiki/index.php?action=raw&title=')
 					
+					wiki_url = results['query']['pages'][result]['fullurl']
+					wiki_url_raw = wiki_url.replace('/wiki/','/w/index.php?action=raw&title=')
+				
+	
+					if disambig_flag is True:
+						#Check if this is only the topic unit
+						print '-'*150
+						print "\n\tGot a disambiguation article. Trying to find relevant one"
+						print "\tVisiting", wiki_url_raw, "to disambiguate."
+						if len(args) == 1:
+							unit_minus_string = string_diff(unit,string)
+							print '\tWill use rest of the terms in the topic unit, i.e.\"',' '.join(unit_minus_string), '\" to disambiguate'
+							wiki_url_raw = extract_links(wiki_url_raw, unit_minus_string)
+						else:
+							print 'TU sent with AU:'
+							print  type(args[1].split(' '))
+							wiki_url_raw = extract_links(wiki_url_raw, args[1].split(' '))
+					
+					wiki_title = results['query']['pages'][result]['title']
+					
+					try:
+						unit_dict[wiki_title]=wiki_url_raw
+					except:
+						print "Pass"		
 					#reading contents
 					#content = urllib.urlopen(wiki_url).read()
 					#m = re.search(du,content,re.I)
@@ -196,25 +230,68 @@ def wiki_lookup(*tu):
 					
 			
 			 				#tu[results['query']['pages'][result]['title']] = results['query']['pages'][result]['fullurl']
+			
+		for title, url in unit_dict.items():
+			print title, url
+
+def string_diff(stringa, stringb):
+	#print 'In the string diff',stringa, stringb, '\n'
+	listb = stringb.split(' ')
+	for word in listb:
+		if word.lower() in stringa:
+			stringa.remove(word.lower())
+			#print stringa
+	#print "Returning from string_diff",stringa, '\n\n'
+	return stringa	
 				
 
-def extract_links():
-	dp = 'http://en.wikipedia.org/w/index.php?action=raw&title=Alice'
+def extract_links(wiki_url_raw, relevant_words):
+	url_front = 'http://en.wikipedia.org/w/index.php?action=raw&title='
 	import urllib2
 	from BeautifulSoup import BeautifulSoup
+	import string
 	
-	f = urllib2.urlopen(dp).read()
+	trans = string.maketrans("[]*","   ")
+	f = urllib2.urlopen(wiki_url_raw).read()
 	soup = BeautifulSoup(f)
 	
 	wikilink_rx = re.compile(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]')
 	
 	links = soup.string.splitlines()
+	print "Relevant",relevant_words
+	relevant_words = set(relevant_words)
+	
+	print "\n\tThe options are:"
+	
+	
+	max_count = 0
+	disambig_url = ''
 	for link in links:
 		l = wikilink_rx.sub(r'\1',link)
 		if '*' in l:
-			print l
+			print '\t',l
+			set_l = set(l.lower().split())
+			count = len(set_l.intersection(relevant_words))
+			if count > max_count:
+				max_count = count
+				# split by comma, take the first element,
+				# split by |, take the first element
+				# this is the title of the wikiarticle
+				# strip the surrounding spaces
+				# replace iniside spaces with underscore 
+				link = link.split(',')[0].split('|')[0].encode("utf-8").translate(trans).strip(' ').replace(' ','_')
+				disambig_url = link
+				
+	if max_count == 0:
+		print "\n\tNone of the articles are related to the topic unit" 
+		print '-'*150
+		# TODO Return none
+		return wiki_url_raw
+	else:
+		print '-'*150
+		return url_front + disambig_url
 	
 
 if __name__ == '__main__':
-	#phrase_extraction()
-	extract_links()
+	phrase_extraction()
+	#extract_links()
