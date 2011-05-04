@@ -7,6 +7,10 @@ import simplejson
 import re
 import itertools
 import traceback
+import urllib2
+from BeautifulSoup import BeautifulSoup
+import string
+	
 
 url = 'http://en.wikipedia.org/w/api.php?action=list'
 #
@@ -134,24 +138,96 @@ def phrase_extraction():
         	try:
 			sentenceid, tu, au1, au2, au3, au4, au5 = map(str, line.split('\t'))
                 	print "Topic unit is:",tu 
-			print "Alternate units are:", "\n(1)",au1, "\n(2)",au2, "\n(3)",au3, "\n(4)",au4, "\n(5)",au5
 			print "Find articles from Topic unit:"
-			wiki_lookup(tu)
+			tu_dict = wiki_lookup_tu(tu)
 			print "Find articles from Alternate unit:"
-			wiki_lookup(au2.strip(), tu)
-			wiki_lookup(au3.strip(), tu)
-			wiki_lookup(au4.strip(), tu)
-			wiki_lookup(au5.strip(), tu)
+			print "Alternate units are:", "\n(1)",au1, "\n(2)",au2, "\n(3)",au3, "\n(4)",au4, "\n(5)",au5
+			print '%s %s %s %s' % ('Shingle'.rjust(30),'Article Title'.rjust(30),'URL'.rjust(60),'Disambiguation'.rjust(15))	
+			print '-'*150
+	
+			au_dict = {}
+	
+			au_dict.update(wiki_lookup_au(au1.strip(), tu))
+			au_dict.update(wiki_lookup_au(au2.strip(), tu))
+			au_dict.update(wiki_lookup_au(au3.strip(), tu))
+			au_dict.update(wiki_lookup_au(au4.strip(), tu))
+			au_dict.update(wiki_lookup_au(au5.strip(), tu))
 		except:
-			print traceback.print_stack()						
+			#print traceback.print_stack()		
+			print 'Some error'			
+
+	#for title, url in tu_dict.items():
+		#print title,url
+	print '='*150
+	print 'Final Matrix'.rjust(75)
+	print '='*150
+	
+	print '\t\t\t'.join(tu_dict.keys())
+
+	for title, url in au_dict.items():
+		print '\n',title
+		
+	
 def convert(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1 \2', s1).lower()
 
 
 
+def wiki_lookup_au(*args):
+	url = 'http://en.wikipedia.org/w/api.php?action=query'
+	unit = args[0]
+	if len(unit)>1:
+		unit = unit.title()
+	topic_unit = args[1].split(' ')
+	#print unit, ' '.join(topic_unit)
+	unit_dict = {'':''}
+	srch_args = {'format':'json',
+			'inprop':'displaytitle|url',
+			'titles':unit,
+			'prop':'info|categories',
+			'redirects':'',	
+			}
+	url_srch = url + '&' + urllib.urlencode(srch_args)
+	results = simplejson.load(urllib.urlopen(url_srch))
+	
+	wiki_title = ''
+	wiki_url_raw = ''	
+	for result in results['query']['pages']:
+		if int(result)>-1:
+		# Iterate thtough all the categories and set flag to true if 
+		# the page is a disambiguation page
+			if results['query']['pages'][result].has_key('categories'):
+				disambig_flag = False
+				for category in results['query']['pages'][result]['categories']:
+					if category['title'].lower().find('disambiguation') != -1:
+						disambig_flag = True
+				
+			print '%s,%s,%s,%s' % (unit.rjust(30),
+				results['query']['pages'][result]['title'].rjust(30),
+				results['query']['pages'][result]['fullurl'].rjust(60), str(disambig_flag).rjust(15))
+								
+					
+			wiki_url = results['query']['pages'][result]['fullurl']
+			wiki_url_raw = wiki_url.replace('/wiki/','/w/index.php?action=raw&title=')
+				
+			wiki_title = results['query']['pages'][result]['title']
+	
+			if disambig_flag is True:
+				#Check if this is only the topic unit
+				print '-'*150
+				print "\n\tGot a disambiguation article. Trying to find relevant one"
+				print "\tVisiting", wiki_url_raw, "to disambiguate."
+				wiki_url_raw = extract_links(wiki_url_raw, topic_unit)
 
-def wiki_lookup(*args):
+				#print 'Got the disambiguated url',wiki_url_raw	
+
+	return {wiki_title:wiki_url_raw}	
+
+
+
+
+def wiki_lookup_tu(*args):
 	url = 'http://en.wikipedia.org/w/api.php?action=query'
 	if len(args)==2:
 		topic_unit = args[1]
@@ -230,9 +306,10 @@ def wiki_lookup(*args):
 					
 			
 			 				#tu[results['query']['pages'][result]['title']] = results['query']['pages'][result]['fullurl']
-			
+					
 		for title, url in unit_dict.items():
 			print title, url
+		return unit_dict
 
 def string_diff(stringa, stringb):
 	#print 'In the string diff',stringa, stringb, '\n'
@@ -243,22 +320,35 @@ def string_diff(stringa, stringb):
 			#print stringa
 	#print "Returning from string_diff",stringa, '\n\n'
 	return stringa	
-				
+	
+			
+def count_intersect(wiki_url_raw1, wiki_url_raw2, relevant_words):
+	url_front = 'http://en.wikipedia.org/w/index.php?action=raw&title='
+		#print wiki_url_raw, relevant_words	
+	trans = string.maketrans("[]*","   ")
+	f1 = urllib2.urlopen(wiki_url_raw1).read()
+	f2 = urllib2.urlopen(wiki_url_raw2).read()
+	soup1 = BeautifulSoup(f1)
+	soup2 = BeautifulSoup(f2)
+	wikilink_rx = re.compile(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]')
+
+	bag_of_words1 = wikilink_rx.sub(r'\1',str(soup1)).lower().split()
+	bag_of_words2 = wikilink_rx.sub(r'\1',str(soup2)).lower().split()
+	relevant_words = set(relevant_words)
+	
+	#for word in bag_of_words1:
+	#	ba
+	
 
 def extract_links(wiki_url_raw, relevant_words):
 	url_front = 'http://en.wikipedia.org/w/index.php?action=raw&title='
-	import urllib2
-	from BeautifulSoup import BeautifulSoup
-	import string
-	
+		#print wiki_url_raw, relevant_words	
 	trans = string.maketrans("[]*","   ")
 	f = urllib2.urlopen(wiki_url_raw).read()
 	soup = BeautifulSoup(f)
-	
 	wikilink_rx = re.compile(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]')
-	
-	links = soup.string.splitlines()
-	print "Relevant",relevant_words
+
+	links = str(soup).splitlines()
 	relevant_words = set(relevant_words)
 	
 	print "\n\tThe options are:"
@@ -288,6 +378,7 @@ def extract_links(wiki_url_raw, relevant_words):
 		# TODO Return none
 		return wiki_url_raw
 	else:
+		print "\n\tMost related topic unit seems to be:", url_front + disambig_url
 		print '-'*150
 		return url_front + disambig_url
 	
