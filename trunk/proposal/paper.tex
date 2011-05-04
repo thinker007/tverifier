@@ -384,7 +384,15 @@ After disambiguation for Leo using word overlap between description and topic un
 
 \url{http://en.wikipedia.org/w/index.php?action=raw&title=Leo_(constellation)}
 
-Now, we need to count word overlap for each of the pages for les paul, adolph rickenbacker, leo with all pages for the topic unit and take sum of the overlap to produce the ranking of alternate units 
+Now, we need to count word overlap for each of the pages for les paul, adolph rickenbacker, leo with all pages for the topic unit and take sum of the overlap to produce the ranking of alternate units. So we generate bag of words for pages corresponding to all alternative units and also all the pages for the topic unit. 
+
+Finally, for each alternate unit page, we count word overlap between alternate unit page and all topic unit pages and take sum of them. Now, we have a value associated with each alternate units that we are using for the ranking of the alternate units. Total count value for all alternate units and corresponding ranking is given below:
+
+231 Les Paul \\
+143 Adolph Rickenbacker \\
+0 Leo
+
+From this ranking we can clearly state that Les Paul is the correct answer. 
 
 %A description of the above steps applied to the five problematic sentences
 %\begin{enumerate}
