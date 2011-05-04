@@ -349,19 +349,27 @@ def string_diff(stringa, stringb):
 			
 def count_intersect(wiki_url_raw1, wiki_url_raw2, relevant_words):
 		 
-	#print 'TU_URL:', wiki_url_raw1 
-	#print 'AU_URL:',wiki_url_raw2
-	#print 'Rest of the words:' ,' '.join(relevant_words)	
+	print 'TU_URL:', wiki_url_raw1 
+	print 'AU_URL:',wiki_url_raw2
+	print 'Rest of the words:' ,' '.join(relevant_words)	
+	
 	trans = string.maketrans("[]*","   ")
-	f1 = urllib2.urlopen(wiki_url_raw1).read()
-	f2 = urllib2.urlopen(wiki_url_raw2).read()
+	try:
+		f1 = urllib2.urlopen(wiki_url_raw1).read()
+		f2 = urllib2.urlopen(wiki_url_raw2).read()
+	except:
+		return
+
+	
 	soup1 = BeautifulSoup(f1)
 	soup2 = BeautifulSoup(f2)
 	wikilink_rx = re.compile(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]')
 
-	bag_of_words1 = wikilink_rx.sub(r'\1',str(soup1)).lower().split()
-	bag_of_words2 = wikilink_rx.sub(r'\1',str(soup2)).lower().split()
-	#relevant_words = set(relevant_words)
+	bag_of_words1 = wikilink_rx.sub(r'\1',str(soup1)).lower().translate(string.maketrans("",""), string.punctuation).split()
+	bag_of_words2 = wikilink_rx.sub(r'\1',str(soup2)).lower().translate(string.maketrans("",""), string.punctuation).split()
+	
+	print bag_of_words1
+	print bag_of_words2 	
 
 	bow_freq1 = {}
 	bow_freq2 = {}
@@ -376,8 +384,8 @@ def count_intersect(wiki_url_raw1, wiki_url_raw2, relevant_words):
 			bow_freq2[word] += 1
 		except:
 			bow_freq2[word] = 1
-	for k in bow_freq1:
-		if bow_freq2.get(k,0)>	0:
+	for k in bow_freq2:
+		if bow_freq1.get(k,0)>	0:
 			bow_freq3[k] = bow_freq1[k] + bow_freq2[k]
 
 	if debug:
