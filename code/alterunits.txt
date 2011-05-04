@@ -12,7 +12,7 @@
 12	river is the longest river in the united states	mississippi	missouri	nile	arkansas	minnesota
 13	is the first american in space	alan shepard	sally	sally kristen	august	yuri
 14	nixon visited china in	1972	1971	1987
-15	liu won the nobel peace prize in 1991	liu	san suu	suu kyi	kyi burma	aung san
+15	won the nobel peace prize in 1991	liu	san suu	suu kyi	kyi burma	aung san
 16	microsoft's corporate headquarters locates in	new jersey	new zealand	redmond	seattle	virginia
 17	people died in the china airlines' crash in nagoya japan	264	140	26	232	5
 18	released the internet worm in the late 1980s	morris	roberts	page	pandora
