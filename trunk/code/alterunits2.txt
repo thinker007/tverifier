@@ -1,5 +1,1 @@
-08	lead actress in the movie sleepless in seattle	hanks meg	meg ryan	tom hanks	nora	sam
 05	invented the electric guitar	les paul	gibson les	leo	llyod	adolph rickenbacker
-20	is the first spacecraft on the moon	apollo	land	landing	nasa	luna
-21	is the primary language of the philippines	english	filipino	spanish	education	history
-34	is the fastest swimmer in the world	michael	alexander	sullivan	long	ernest
