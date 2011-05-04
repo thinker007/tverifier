@@ -1,7 +1,8 @@
 #!/bin/bash
 
-FILE="alterunits2.txt"
-#FILE="alterunits.txt"
+FILE="alterunits.txt"
+#FILE="alterunits2.txt"
+#FILE="alterunits3.txt"
 
 #$1=serial
 #$2=topic unit
@@ -52,6 +53,10 @@ for file in `ls sentences`; do
 	cat /tmp/webpage.html | html2text -nobs | tr "." "\n" | tr "_" " " > /tmp/webpage.txt
 	
 	for au in au1 au2 au3 au4 au5; do
+		au_content=`cat /tmp/$au`
+		if [ -z "$au_content" ]; then
+			continue
+		fi
 		cat /tmp/webpage.txt | grep -i "`cat /tmp/$au`" > /tmp/match_$au
 	done
 	
@@ -74,6 +79,7 @@ for file in `ls sentences`; do
 		echo $count `cat /tmp/$au` >> /tmp/output
 	done
 	
+	#output sorted alternate units
 	cat /tmp/tu >> output_alg2/$file
 	cat /tmp/output | sort -nr >> output_alg2/$file 
 	
