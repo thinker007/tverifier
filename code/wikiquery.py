@@ -14,7 +14,8 @@ import string
 
 url = 'http://en.wikipedia.org/w/api.php?action=list'
 #
-debug = True
+debug = False
+#debug = True
 #regex_tokenize = True
 regex_tokenize = False
 def stop_removed():
@@ -152,22 +153,45 @@ def phrase_extraction():
 			au_dict.update(wiki_lookup_au(au3.strip(), tu))
 			au_dict.update(wiki_lookup_au(au4.strip(), tu))
 			au_dict.update(wiki_lookup_au(au5.strip(), tu))
+			
+			outputfn = 'output_alg1/'+sentenceid
+			fp = open(outputfn,'wb')
+			fp.write(tu+'\n')
+
+			print '='*150
+			print 'Final Matrix'.rjust(75)
+			print '='*150
+
+		
+			print '\t\t\t','\t\t'.join(tu_dict.keys())
+
+
+			if debug:	
+				for au_title, au_url in au_dict.items():
+					print  au_title
+					score = []
+					for tu_title, tu_url in tu_dict.items():
+						relevant_words = string_diff(tu.split(' '),tu_title)
+						if len(au_url)>0 and len(tu_url)>0:	 
+							score.append(count_intersect(au_url,tu_url,relevant_words))
+					print '\t\t','\t'.join(score)
+			else:
+				for au_title, au_url in au_dict.items():
+					score =0
+					for tu_title, tu_url in tu_dict.items():
+						relevant_words = string_diff(tu.split(' '),tu_title)
+						if len(au_url)>0 and len(tu_url)>0:
+							score+=count_intersect(au_url,tu_url,relevant_words)
+					
+					print score, au_title
+					au_score = str(score) + ' ' + au_title + '\n'
+					fp.write(au_score)
 		except:
 			#print traceback.print_stack()		
 			print 'Some error'			
 
-	#for title, url in tu_dict.items():
-		#print title,url
-	print '='*150
-	print 'Final Matrix'.rjust(75)
-	print '='*150
-	
-	print '\t\t\t'.join(tu_dict.keys())
 
-	for title, url in au_dict.items():
-		print '\n',title
-		
-	
+
 def convert(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1 \2', s1).lower()
@@ -245,7 +269,7 @@ def wiki_lookup_tu(*args):
 		print '%s %s %s %s' % ('Shingle'.rjust(30),'Article Title'.rjust(30),'URL'.rjust(60),'Disambiguation'.rjust(15))	
 		print '-'*150
 
-		unit_dict = {'':''}
+		unit_dict = {}
 		for string in strings:
 			string = string.strip('\n')
 			if string.find(' ')==-1:
@@ -312,6 +336,7 @@ def wiki_lookup_tu(*args):
 		return unit_dict
 
 def string_diff(stringa, stringb):
+	# First argument is a list second argument is a string
 	#print 'In the string diff',stringa, stringb, '\n'
 	listb = stringb.split(' ')
 	for word in listb:
@@ -323,8 +348,10 @@ def string_diff(stringa, stringb):
 	
 			
 def count_intersect(wiki_url_raw1, wiki_url_raw2, relevant_words):
-	url_front = 'http://en.wikipedia.org/w/index.php?action=raw&title='
-		#print wiki_url_raw, relevant_words	
+		 
+	#print 'TU_URL:', wiki_url_raw1 
+	#print 'AU_URL:',wiki_url_raw2
+	#print 'Rest of the words:' ,' '.join(relevant_words)	
 	trans = string.maketrans("[]*","   ")
 	f1 = urllib2.urlopen(wiki_url_raw1).read()
 	f2 = urllib2.urlopen(wiki_url_raw2).read()
@@ -334,11 +361,37 @@ def count_intersect(wiki_url_raw1, wiki_url_raw2, relevant_words):
 
 	bag_of_words1 = wikilink_rx.sub(r'\1',str(soup1)).lower().split()
 	bag_of_words2 = wikilink_rx.sub(r'\1',str(soup2)).lower().split()
-	relevant_words = set(relevant_words)
-	
-	#for word in bag_of_words1:
-	#	ba
-	
+	#relevant_words = set(relevant_words)
+
+	bow_freq1 = {}
+	bow_freq2 = {}
+	bow_freq3 = {}	
+	for word in bag_of_words1:
+		try:
+			bow_freq1[word] += 1
+		except:
+			bow_freq1[word] = 1
+	for word in bag_of_words2:
+		try:
+			bow_freq2[word] += 1
+		except:
+			bow_freq2[word] = 1
+	for k in bow_freq1:
+		if bow_freq2.get(k,0)>	0:
+			bow_freq3[k] = bow_freq1[k] + bow_freq2[k]
+
+	if debug:
+		score = ''	
+		for word in relevant_words:
+			if bow_freq3.get(word,0) > 0 and word not in ['the','a']:
+	 			score += word + '('+ str(bow_freq3.get(word)) + '),'
+		return score 
+	else:
+		score = 0
+		for word in relevant_words:
+			if bow_freq3.get(word,0) > 0 and word not in ['the', 'a']:
+				score+=bow_freq3.get(word)
+	 	return score	
 
 def extract_links(wiki_url_raw, relevant_words):
 	url_front = 'http://en.wikipedia.org/w/index.php?action=raw&title='
