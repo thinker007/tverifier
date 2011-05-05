@@ -394,6 +394,8 @@ Finally, for each alternate unit page, we count word overlap between alternate u
 
 From this ranking we can clearly state that Les Paul is the correct answer. 
 
+
+
 %A description of the above steps applied to the five problematic sentences
 %\begin{enumerate}
 %\item Sentence 1: Les Paul invented the electric guitar.
@@ -486,6 +488,27 @@ For this sentence the alternative units are les paul, gibson les, llyod, leo, ad
 0 adolph rickenbacker
 
  It shows that we have 3 content word intersection for les paul, 1 word intersection for gibson les and 0 for all other alternate units. This ranking is the final truth or confidence ranking for all alternate units. 
+ 
+ 
+ \subsection{Result Summery}
+ We are finding ranking for five alternate units for each doubtful sentences using both algorithm 1 and algorithm 2. Then we are taking union of ranking for from both algorithm and producing the final ranking for all the sentences. Appendix A discussed ranking done by algorithm 1 and appendix B discusses ranking done by algorithm 2. Finally, we are combining both of these ranking using union and producing final ranking, which is discussed at the Appendix C. Our final ranking is following:
+
+Total correct sentences from T-verifier:  $43$ \\
+Correct output by both algorithm:  $23$ \\
+Very close to correct output by both algorithm:  $8$\\
+Close to correct output by both algorithm:  $7$ \\
+Incorrect output by both algorithm:  $5$ \\
+
+
+Although the overall result is promising, there are some difficulties because of disambiguation in algorithm 1. These difficulties are described below:
+
+\begin{itemize}
+\item \emph{Handling case of article titles:} First letter of first word in Wikipedia article title is case insensitive and all the remaining letters are case sensitive. This creates problems for extracting relevant pages from Wikipedia. For example, to find the page for "Big Mac", we can't find the page if we supply "Big mac" because 'M' of "mac" needs to be capital. But for "Sleepless in Seattle" we need to use small 'i' in the "in" for extracting correct page.
+
+\item \emph{Problem with finding relevant disambiguation page:} We are using word overlap between words of topic unit and description of disambiguation link to find disambiguated page. But this method is not powerful enough to get appropriate disambiguation page and we are getting lot of irrelevant pages. So the bag of words generated for these irrelevant pages are not good as feature and we are getting bad result. Hence we need better disambiguation technique to deal with this issue and improve the performance of our algorithm further.  
+\end{itemize}
+
+ 
  
  %\paragraph{Examples}
 %Examples of the algorithm described above is discussed below. The algorithm 2 produce perfect result for three of the five sentences. But it struggles with the remaining two sentences. However, the algorithm 2 primarily augment the algorithm 1 and add strength to the results from algorithm 1. Hence they work better together and produce overall better output.
