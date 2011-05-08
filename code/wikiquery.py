@@ -135,7 +135,7 @@ def POS_tag():
 
 def phrase_extraction():
 	#wikisearch()
-	for line in open('alterunits2.txt'):
+	for line in open('alterunits.txt'):
         	try:
 			sentenceid, tu, au1, au2, au3, au4, au5 = map(str, line.split('\t'))
                 	print "Topic unit is:",tu 
